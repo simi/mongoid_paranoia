@@ -1,4 +1,4 @@
-# Paranoid Documents for Mongoid 4
+# Paranoid Documents for Mongoid 4 [![Build Status](https://travis-ci.org/simi/mongoid-paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid-paranoia)
 
 There may be times when you don't want documents to actually get deleted from the database, but "flagged" as deleted. mongoid-paranoia provides a Paranoia module to give you just that.
 
