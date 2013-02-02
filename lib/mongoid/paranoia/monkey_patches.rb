@@ -46,7 +46,7 @@ module Mongoid
           # @since 3.0.10
           def destroy(parent, relation, doc)
             doc.flagged_for_destroy = true
-            if !doc.embedded? || parent.new_record? || doc.paranoid?
+            if !doc.embedded? || parent.new_record? || doc.respond_to?(:paranoid)
               destroy_document(relation, doc)
             else
               parent.flagged_destroys.push(->{ destroy_document(relation, doc) })
@@ -79,9 +79,9 @@ module Mongoid
           execute_callback :before_remove, document
           doc = target.delete_one(document)
           if doc && !_binding?
-            _unscoped.delete_one(doc) unless doc.paranoid?
+            _unscoped.delete_one(doc) unless doc.respond_to?(:paranoid)
             if _assigning?
-              if doc.paranoid?
+              if doc.respond_to?(:paranoid)
                 doc.destroy(suppress: true)
               else
                 base.add_atomic_pull(doc)
