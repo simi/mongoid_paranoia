@@ -19,7 +19,6 @@ class Address
   field :s, type: String, as: :suite
   field :name, localize: true
 
-  embeds_many :locations, validate: false
   embeds_one :code, validate: false
   embeds_one :target, as: :targetable, validate: false
 
@@ -33,7 +32,6 @@ class Address
   end
 
   accepts_nested_attributes_for :code, :target
-  accepts_nested_attributes_for :locations, allow_destroy: true
 
   belongs_to :account
 

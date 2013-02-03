@@ -40,8 +40,6 @@ class Person
 
   attr_reader :rescored
 
-  embeds_many :favorites, order: :title.desc, inverse_of: :perp, validate: false
-  embeds_many :videos, order: [[ :title, :asc ]], validate: false
   embeds_many :phone_numbers, class_name: "Phone", validate: false
   embeds_many :phones, store_as: :mobile_phones, validate: false
   embeds_many :addresses, as: :addressable, validate: false do
@@ -53,9 +51,6 @@ class Person
     end
   end
 
-  embeds_many :address_components, validate: false
-  embeds_many :services, cascade_callbacks: true, validate: false
-  embeds_many :symptoms, validate: false
   embeds_many :appointments, validate: false
   embeds_many :paranoid_phones, validate: false
 
@@ -115,11 +110,9 @@ class Person
   accepts_nested_attributes_for :name, update_only: true
   accepts_nested_attributes_for :pet, allow_destroy: true
   accepts_nested_attributes_for :game, allow_destroy: true
-  accepts_nested_attributes_for :favorites, allow_destroy: true, limit: 5
   accepts_nested_attributes_for :posts
   accepts_nested_attributes_for :preferences
   accepts_nested_attributes_for :quiz
-  accepts_nested_attributes_for :services, allow_destroy: true
   accepts_nested_attributes_for :paranoid_phones
 
   scope :minor, where(:age.lt => 18)
@@ -195,5 +188,3 @@ class Person
   reset_callbacks(:save)
   reset_callbacks(:destroy)
 end
-
-require "app/models/doctor"

@@ -1,1 +1,0 @@
-class Pencil < Tool; end

@@ -1,2 +1,0 @@
-class Actress < Actor
-end

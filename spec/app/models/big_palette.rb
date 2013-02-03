@@ -1,2 +1,0 @@
-class BigPalette < Palette
-end

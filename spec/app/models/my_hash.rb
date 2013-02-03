@@ -1,2 +1,0 @@
-class MyHash < ::Hash
-end
