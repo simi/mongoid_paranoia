@@ -133,25 +133,3 @@ module Mongoid
     end
   end
 end
-
-module Mongoid
-  module Relations
-    module Embedded
-      class Many < Relations::Many
-        # For use only with Mongoid::Paranoia - will be removed in 4.0.
-        #
-        # @example Get the deleted documents from the relation.
-        #   person.paranoid_phones.deleted
-        #
-        # @return [ Criteria ] The deleted documents.
-        #
-        # @since 3.0.10
-        def deleted
-          unscoped.deleted
-        end
-        # This class handles the behaviour for a document that embeds many other
-        # documents within in it as an array.
-      end
-    end
-  end
-end
