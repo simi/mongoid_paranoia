@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'mongoid/paranoia/monkey_patches'
+require 'mongoid/validations/uniqueness_including_deleted_validator'
 module Mongoid
 
   # Include this module to get soft deletion of root level documents.

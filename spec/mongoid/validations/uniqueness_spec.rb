@@ -4,9 +4,8 @@ describe Mongoid::Validations::UniquenessValidator do
   describe "#valid?" do
     context "when the document is a root document" do
       context "when the document is paranoid" do
-
         before do
-          ParanoidPost.validates_uniqueness_of :title
+          ParanoidPost.validates(:title, :uniqueness_including_deleted => true)
         end
 
         after do
