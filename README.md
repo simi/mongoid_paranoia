@@ -32,7 +32,6 @@ Person.deleted # Returns documents that have been "flagged" as deleted.
 ```
 
 ## TODO
-- reduce test models
 - get rid of [monkey_patches.rb](https://github.com/simi/mongoid-paranoia/blob/master/lib/mongoid/paranoia/monkey_patches.rb)
 - review persisted? behaviour
 
