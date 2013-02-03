@@ -10,6 +10,21 @@ Add this line to your application's Gemfile:
 gem 'mongoid-paranoia'
 ```
 
+## Changes in 4.0
+### [Uniqueness validator is not overriding default one](https://github.com/simi/mongoid-paranoia/commit/ce69dfeeb3f625535749ac919f2f643d47f3cdf4)
+
+#### Old syntax:
+```ruby
+validates_uniqueness_of :title
+validates :title, :uniqueness => true
+```
+
+#### New syntax:
+```ruby
+validates :title, :uniqueness_including_deleted => true
+```
+
+
 ## Usage
 
 ```ruby
