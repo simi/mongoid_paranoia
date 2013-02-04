@@ -2,6 +2,8 @@
 
 There may be times when you don't want documents to actually get deleted from the database, but "flagged" as deleted. mongoid-paranoia provides a Paranoia module to give you just that.
 
+Old API is froozen in [3.0.0-stable branch](https://github.com/simi/mongoid-paranoia/tree/3.0.0-stable) and works with Mongoid 4.
+
 ## Installation
 
 Add this line to your application's Gemfile:
