@@ -1,4 +1,7 @@
 language: ruby
+gemfile:
+  - Gemfile
+  - Gemfile.mongoid4-dev
 bundler_args: --without development
 rvm:
   - 1.9.3
