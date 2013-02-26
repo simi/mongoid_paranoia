@@ -157,6 +157,10 @@ describe Mongoid::Paranoia do
         raw["deleted_at"].should be_within(1).of(Time.now)
       end
 
+      it "is still marked as persisted" do
+        expect(post.persisted?).to eq(true)
+      end
+
       it "does not return the document in a find" do
         expect {
           ParanoidPost.find(post.id)

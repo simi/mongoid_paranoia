@@ -38,6 +38,20 @@ module Mongoid
       run_callbacks(:destroy) { delete! }
     end
 
+    # Override the persisted method to allow for the paranoia gem.
+    # If a paranoid record is selected, then we only want to check
+    # if it's a new record, not if it is "destroyed"
+    #
+    # @example
+    #   document.persisted?
+    #
+    # @return [ true, false ] If the operation succeeded.
+    #
+    # @since 4.0.0
+    def persisted?
+      !new_record?
+    end
+
     # Delete the +Document+, will set the deleted_at timestamp and not actually
     # delete it.
     #
