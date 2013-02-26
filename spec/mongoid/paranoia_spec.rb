@@ -384,6 +384,25 @@ describe Mongoid::Paranoia do
           phone.should be_deleted
         end
       end
+
+      context "when the document has non-dependent relation" do
+        let(:post) do
+          ParanoidPost.create(title: "test")
+        end
+
+        let!(:tag) do
+          post.tags.create(text: "tagie")
+        end
+
+        before do
+          post.delete
+        end
+
+        it "doesn't cascades the dependent option" do
+          expect(tag.reload).to eq(tag)
+        end
+
+      end
     end
   end
 
