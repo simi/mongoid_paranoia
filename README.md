@@ -48,6 +48,12 @@ The documents that have been "flagged" as deleted (soft deleted) can be accessed
 Person.deleted # Returns documents that have been "flagged" as deleted.
 ```
 
+You can also access all documents (both deleted and non-deleted) at any time by using the `unscoped` class method:
+
+```ruby
+Person.unscoped.all # Returns all documents, both deleted and non-deleted
+```
+
 ## TODO
 - get rid of [monkey_patches.rb](https://github.com/simi/mongoid-paranoia/blob/master/lib/mongoid/paranoia/monkey_patches.rb)
 - review persisted? behaviour
