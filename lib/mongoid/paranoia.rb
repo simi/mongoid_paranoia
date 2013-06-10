@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'mongoid/paranoia/monkey_patches'
-require 'mongoid/validations/uniqueness_including_deleted_validator'
+require 'mongoid/validatable/uniqueness_including_deleted_validator'
 module Mongoid
 
   # Include this module to get soft deletion of root level documents.
@@ -13,6 +13,7 @@ module Mongoid
   #     include Mongoid::Paranoia
   #   end
   module Paranoia
+    include Mongoid::Persistable::Deletable
     extend ActiveSupport::Concern
 
     included do
@@ -37,18 +38,6 @@ module Mongoid
       run_callbacks(:destroy) { delete! }
     end
 
-    # Delete the paranoid +Document+ from the database completely.
-    #
-    # @example Hard delete the document.
-    #   document.delete!
-    #
-    # @return [ true, false ] If the operation succeeded.
-    #
-    # @since 1.0.0
-    def delete!
-      Persistence::Operations.remove(self).persist
-    end
-
     # Delete the +Document+, will set the deleted_at timestamp and not actually
     # delete it.
     #
@@ -60,17 +49,29 @@ module Mongoid
     # @return [ true ] True.
     #
     # @since 1.0.0
-    def remove(options = {})
+    def remove_with_paranoia(options = {})
       cascade!
       time = self.deleted_at = Time.now
       paranoid_collection.find(atomic_selector).
         update({ "$set" => { paranoid_field => time }})
       @destroyed = true
       IdentityMap.remove(self)
-      Threaded.clear_options!
       true
     end
+    alias_method_chain :remove, :paranoia
     alias :delete :remove
+
+    # Delete the paranoid +Document+ from the database completely.
+    #
+    # @example Hard delete the document.
+    #   document.delete!
+    #
+    # @return [ true, false ] If the operation succeeded.
+    #
+    # @since 1.0.0
+    def delete!
+      remove_without_paranoia
+    end
 
     # Determines if this document is destroyed.
     #

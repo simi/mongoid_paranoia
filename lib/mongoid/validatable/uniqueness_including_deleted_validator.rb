@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Mongoid
-  module Validations
+  module Validatable
     # Validates whether or not a field is unique against the documents in the
     # database including deleted documents for paranoic models.
     #
@@ -13,7 +13,7 @@ module Mongoid
     #
     #     validates :title, :uniqueness_including_deleted => true
     #   end
-    class UniquenessIncludingDeletedValidator < Mongoid::Validations::UniquenessValidator
+    class UniquenessIncludingDeletedValidator < Mongoid::Validatable::UniquenessValidator
       # Scope the criteria to the scope options provided.
       # Added Paranoia spice.
       #

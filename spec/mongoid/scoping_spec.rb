@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Mongoid::Scoping do
+describe Mongoid::Criteria::Scopable do
 
   context "when the document is paranoid" do
 

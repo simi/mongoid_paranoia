@@ -676,7 +676,7 @@ describe Mongoid::Paranoia do
     end
 
     before do
-      post.set(:deleted_at, time)
+      post.set(:deleted_at => time)
     end
 
     it "persists the change" do

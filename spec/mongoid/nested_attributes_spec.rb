@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Mongoid::NestedAttributes do
+describe Mongoid::Attributes::Nested do
   describe "##{name}_attributes=" do
     context "when the parent document is new" do
       context "when the relation is an embeds many" do
