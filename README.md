@@ -56,7 +56,7 @@ Person.unscoped.all # Returns all documents, both deleted and non-deleted
 
 ## TODO
 - get rid of [monkey_patches.rb](https://github.com/simi/mongoid-paranoia/blob/master/lib/mongoid/paranoia/monkey_patches.rb)
-- review persisted? behaviour
+- [review persisted? behaviour](https://github.com/simi/mongoid-paranoia/issues/2)
 
 ## Contributing
 
