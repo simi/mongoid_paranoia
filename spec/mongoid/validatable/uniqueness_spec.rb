@@ -30,7 +30,7 @@ describe Mongoid::Validatable::UniquenessValidator do
         context "when the field is unique for non soft deleted docs" do
 
           before do
-            post.delete
+            post.delete!
           end
 
           let(:new_post) do
