@@ -9,7 +9,7 @@ There may be times when you don't want documents to actually get deleted from th
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mongoid-paranoia'
+gem 'mongoid-paranoia', github: 'simi/mongoid-paranoia' # before first release
 ```
 
 ## Changes in 4.0
