@@ -14,7 +14,7 @@ gem 'mongoid-paranoia', github: 'simi/mongoid-paranoia' # before first release
 
 ## Changes in 4.0
 ### [Uniqueness validator is not overriding default one](https://github.com/simi/mongoid-paranoia/commit/ce69dfeeb3f625535749ac919f2f643d47f3cdf4)
-This will be changed soon - https://github.com/simi/mongoid-paranoia/issues/5. Please leave a note if you don't like this behaviour, I want to merge it it in one week.
+This will be changed soon - https://github.com/simi/mongoid-paranoia/issues/5. Please leave a note if you don't like this behaviour, I want to merge it it soon.
 
 #### Old syntax:
 ```ruby
