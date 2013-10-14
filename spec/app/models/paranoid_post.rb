@@ -4,7 +4,8 @@ class ParanoidPost
 
   field :title, type: String
 
-  attr_accessor :after_destroy_called, :before_destroy_called
+  attr_accessor :after_destroy_called, :before_destroy_called,
+    :after_restore_called, :before_restore_called
 
   belongs_to :person
 
@@ -16,6 +17,8 @@ class ParanoidPost
 
   before_destroy :before_destroy_stub
   after_destroy :after_destroy_stub
+  before_restore :before_restore_stub
+  after_restore :after_restore_stub
 
   def before_destroy_stub
     self.before_destroy_called = true
@@ -23,6 +26,14 @@ class ParanoidPost
 
   def after_destroy_stub
     self.after_destroy_called = true
+  end
+
+  def before_restore_stub
+    self.before_restore_called = true
+  end
+
+  def after_restore_stub
+    self.after_restore_called = true
   end
 
   class << self

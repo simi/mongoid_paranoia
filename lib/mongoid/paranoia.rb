@@ -23,6 +23,7 @@ module Mongoid
 
       default_scope where(deleted_at: nil)
       scope :deleted, ne(deleted_at: nil)
+      define_model_callbacks :restore
     end
 
     # Delete the paranoid +Document+ from the database completely. This will
@@ -96,11 +97,13 @@ module Mongoid
     #
     # @since 1.0.0
     def restore
-      paranoid_collection.find(atomic_selector).
-        update({ "$unset" => { paranoid_field => true }})
-      attributes.delete("deleted_at")
-      @destroyed = false
-      true
+      run_callbacks(:restore) do
+        paranoid_collection.find(atomic_selector).
+          update({ "$unset" => { paranoid_field => true }})
+        attributes.delete("deleted_at")
+        @destroyed = false
+        true
+      end
     end
 
     # Returns a string representing the documents's key suitable for use in URLs.
