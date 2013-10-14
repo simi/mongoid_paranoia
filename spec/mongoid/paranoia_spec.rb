@@ -623,6 +623,18 @@ describe Mongoid::Paranoia do
       it "marks document again as persisted" do
         post.persisted?.should be_true
       end
+
+      context "will run callback" do
+
+        it "before restore" do
+          post.before_restore_called.should be_true
+        end
+
+        it "after restore" do
+          post.after_restore_called.should be_true
+        end
+      end
+
     end
 
     context "when the document is embedded" do
