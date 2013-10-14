@@ -55,6 +55,37 @@ You can also access all documents (both deleted and non-deleted) at any time by 
 Person.unscoped.all # Returns all documents, both deleted and non-deleted
 ```
 
+### Callbacks
+
+`before_restore`, `after_restore` and `around_restore` callbacks are added to your model. They work similarly to the `before_destroy`, `after_destroy` and `around_destroy` callbacks.
+
+```ruby
+class User
+  include Mongoid::Document
+  include Mongoid::Paranoia
+  
+  before_restore :before_restore_action
+  after_restore  :after_restore_action
+  around_restore :around_restore_action
+
+  private
+
+  def before_restore_action
+    puts "BEFORE"
+  end
+
+  def after_restore_action
+    puts "AFTER"
+  end
+  
+  def around_restore_action
+    puts "AROUND - BEFORE"
+    yield # restoring
+    puts "AROUND - AFTER"
+  end
+end
+```
+
 ## TODO
 - get rid of [monkey_patches.rb](https://github.com/simi/mongoid-paranoia/blob/master/lib/mongoid/paranoia/monkey_patches.rb)
 - [review persisted? behaviour](https://github.com/simi/mongoid-paranoia/issues/2)
