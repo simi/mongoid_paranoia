@@ -633,6 +633,11 @@ describe Mongoid::Paranoia do
         it "after restore" do
           post.after_restore_called.should be_true
         end
+
+        it "around restore" do
+          post.around_before_restore_called.should be_true
+          post.around_after_restore_called.should be_true
+        end
       end
 
     end
