@@ -56,10 +56,9 @@ end
 
 RSpec.configure do |config|
 
-  # Drop all collections and clear the identity map before each spec.
+  # Drop all collections
   config.before(:each) do
     Mongoid.purge!
-    Mongoid::IdentityMap.clear
   end
 
   # On travis we are creating many different databases on each test run. We

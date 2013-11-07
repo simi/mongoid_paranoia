@@ -497,10 +497,6 @@ describe Mongoid::Paranoia do
           ParanoidPost.find(post.id)
         }.to raise_error(Mongoid::Errors::DocumentNotFound)
       end
-
-      it "clears out the identity map" do
-        Mongoid::IdentityMap.should be_empty
-      end
     end
 
     context "when the document is embedded" do

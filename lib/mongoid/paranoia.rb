@@ -55,7 +55,6 @@ module Mongoid
       paranoid_collection.find(atomic_selector).
         update({ "$set" => { paranoid_field => time }})
       @destroyed = true
-      IdentityMap.remove(self)
       true
     end
     alias_method_chain :remove, :paranoia
