@@ -89,6 +89,13 @@ end
 - get rid of [monkey_patches.rb](https://github.com/simi/mongoid-paranoia/blob/master/lib/mongoid/paranoia/monkey_patches.rb)
 - [review persisted? behaviour](https://github.com/simi/mongoid-paranoia/issues/2)
 
+## Authors
+
+* extracted from [Mongoid](github.com/mongoid/mongoid) by [@simi](https://github.com/simi)
+* [documentation improvements](https://github.com/simi/mongoid-paranoia/pull/3) by awesome [@loopj](https://github.com/loopj)
+* [latest mongoid support, restore_callback support](https://github.com/simi/mongoid-paranoia/pull/8) by fabulous [@zhouguangming](https://github.com/zhouguangming)
+
+
 ## Contributing
 
 1. Fork it
