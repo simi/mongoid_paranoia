@@ -42,6 +42,22 @@ describe "Paranoia uniqueness scoped validator" do
           end
         end
 
+        context "when the field is not unique for soft deleted docs" do
+
+          before do
+            post = ParanoidPost.create(title: "test")
+            post.delete
+          end
+
+          let(:new_post) do
+            ParanoidPost.new(title: "test")
+          end
+
+          it "returns true" do
+            new_post.should be_valid
+          end
+        end
+
         context "when the field is not unique" do
 
           let(:new_post) do
