@@ -54,7 +54,7 @@ You can also access all documents (both deleted and non-deleted) at any time by 
 Person.unscoped.all # Returns all documents, both deleted and non-deleted
 ```
 
-### Callbacks
+### Callbacks ([@zhouguangming](https://github.com/zhouguangming))
 
 `before_restore`, `after_restore` and `around_restore` callbacks are added to your model. They work similarly to the `before_destroy`, `after_destroy` and `around_destroy` callbacks.
 
