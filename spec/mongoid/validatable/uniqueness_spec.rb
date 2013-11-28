@@ -5,7 +5,7 @@ describe "Paranoia uniqueness scoped validator" do
     context "when the document is a root document" do
       context "when the document is paranoid" do
         before do
-          ParanoidPost.validates(:title, uniqueness: { conditions: -> { where(deleted_at: nil) } })
+          ParanoidPost.validates(:title, uniqueness: { conditions: -> { ParanoidPost.where(deleted_at: nil) } })
         end
 
         after do
