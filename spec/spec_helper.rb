@@ -35,7 +35,7 @@ end
 
 # Set the database that the spec suite connects to.
 Mongoid.configure do |config|
-  config.connect_to(database_id, consistency: :strong)
+  config.connect_to(database_id)
 end
 
 # Autoload every model for the test suite that sits in spec/app/models.
