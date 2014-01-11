@@ -20,8 +20,8 @@ module Mongoid
       class_attribute :paranoid
       self.paranoid = true
 
-      default_scope where(deleted_at: nil)
-      scope :deleted, ne(deleted_at: nil)
+      default_scope -> { where(deleted_at: nil) }
+      scope :deleted, -> { ne(deleted_at: nil) }
       define_model_callbacks :restore
     end
 
