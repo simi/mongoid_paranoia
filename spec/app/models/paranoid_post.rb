@@ -14,7 +14,7 @@ class ParanoidPost
   has_many :authors, dependent: :delete, inverse_of: :post
   has_many :titles, dependent: :restrict
 
-  scope :recent, where(created_at: { "$lt" => Time.now, "$gt" => 30.days.ago })
+  scope :recent, -> {where(created_at: { "$lt" => Time.now, "$gt" => 30.days.ago })}
 
   before_destroy :before_destroy_stub
   after_destroy  :after_destroy_stub

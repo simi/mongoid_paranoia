@@ -35,12 +35,14 @@ class Address
 
   belongs_to :account
 
-  scope :without_postcode, where(postcode: nil)
-  scope :rodeo, where(street: "Rodeo Dr") do
-    def mansion?
-      all? { |address| address.street == "Rodeo Dr" }
+  scope :without_postcode, -> {where(postcode: nil)}
+  scope :rodeo, -> {
+    where(street: "Rodeo Dr") do
+      def mansion?
+        all? { |address| address.street == "Rodeo Dr" }
+      end
     end
-  end
+  }
 
   validates_presence_of :street, on: :update
   validates_format_of :street, with: /\D/, allow_nil: true

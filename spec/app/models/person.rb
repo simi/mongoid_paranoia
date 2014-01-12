@@ -115,8 +115,8 @@ class Person
   accepts_nested_attributes_for :quiz
   accepts_nested_attributes_for :paranoid_phones
 
-  scope :minor, where(:age.lt => 18)
-  scope :without_ssn, without(:ssn)
+  scope :minor, ->{where(:age.lt => 18)}
+  scope :without_ssn, ->{without(:ssn)}
   scope :search, ->(query){ any_of({ title: query }) }
 
   def score_with_rescoring=(score)
