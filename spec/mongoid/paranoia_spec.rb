@@ -285,6 +285,10 @@ describe Mongoid::Paranoia do
         it "returns true" do
           post.should be_destroyed
         end
+
+        it "returns true for deleted scope document" do
+          ParanoidPost.deleted.last.should be_destroyed
+        end
       end
     end
 
@@ -684,7 +688,7 @@ describe Mongoid::Paranoia do
       20.days.ago
     end
 
-    before do
+    let!(:set) do
       post.set(:deleted_at => time)
     end
 
