@@ -18,5 +18,4 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "activemodel", ['~> 4.0.0']
   gem.add_dependency "mongoid", '> 3'
-  gem.add_development_dependency "rspec", '~> 2.11'
 end
