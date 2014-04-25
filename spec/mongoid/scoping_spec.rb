@@ -11,7 +11,7 @@ describe Mongoid::Criteria::Scopable do
       end
 
       it "includes the deleted_at criteria in the selector" do
-        criteria.selector.should eq({
+        expect(criteria.selector).to eq({
           "deleted_at" => nil, "fresh" => true
         })
       end
@@ -24,7 +24,7 @@ describe Mongoid::Criteria::Scopable do
       end
 
       it "does not include the deleted_at in the selector" do
-        criteria.selector.should eq({ "fresh" => true })
+        expect(criteria.selector).to eq({ "fresh" => true })
       end
     end
 
@@ -35,7 +35,7 @@ describe Mongoid::Criteria::Scopable do
       end
 
       it "includes the deleted_at $ne criteria in the selector" do
-        criteria.selector.should eq({
+        expect(criteria.selector).to eq({
           "deleted_at" => { "$ne" => nil }, "fresh" => true
         })
       end
@@ -48,7 +48,7 @@ describe Mongoid::Criteria::Scopable do
       end
 
       it "includes no default scoping information in the selector" do
-        criteria.selector.should eq({ "fresh" => true })
+        expect(criteria.selector).to eq({ "fresh" => true })
       end
     end
   end

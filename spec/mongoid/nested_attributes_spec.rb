@@ -69,23 +69,23 @@ describe Mongoid::Attributes::Nested do
                           end
 
                           it "removes the first document from the relation" do
-                            persisted.paranoid_phones.size.should eq(2)
+                            expect(persisted.paranoid_phones.size).to eq(2)
                           end
 
                           it "does not delete the unmarked document" do
-                            persisted.paranoid_phones.first.number.should eq("3")
+                            expect(persisted.paranoid_phones.first.number).to eq("3")
                           end
 
                           it "adds the new document to the relation" do
-                            persisted.paranoid_phones.last.number.should eq("4")
+                            expect(persisted.paranoid_phones.last.number).to eq("4")
                           end
 
                           it "has the proper persisted count" do
-                            persisted.paranoid_phones.count.should eq(1)
+                            expect(persisted.paranoid_phones.count).to eq(1)
                           end
 
                           it "soft deletes the removed document" do
-                            phone_one.should be_destroyed
+                            expect(phone_one).to be_destroyed
                           end
 
                           context "when saving the parent" do
@@ -95,15 +95,15 @@ describe Mongoid::Attributes::Nested do
                             end
 
                             it "deletes the marked document from the relation" do
-                              persisted.reload.paranoid_phones.count.should eq(2)
+                              expect(persisted.reload.paranoid_phones.count).to eq(2)
                             end
 
                             it "does not delete the unmarked document" do
-                              persisted.reload.paranoid_phones.first.number.should eq("3")
+                              expect(persisted.reload.paranoid_phones.first.number).to eq("3")
                             end
 
                             it "persists the new document to the relation" do
-                              persisted.reload.paranoid_phones.last.number.should eq("4")
+                              expect(persisted.reload.paranoid_phones.last.number).to eq("4")
                             end
                           end
                         end
@@ -148,7 +148,7 @@ describe Mongoid::Attributes::Nested do
                         end
 
                         it "does not destroy the child" do
-                          persisted.reload.paranoid_phones.should_not be_empty
+                          expect(persisted.reload.paranoid_phones).not_to be_empty
                         end
                       end
                     end

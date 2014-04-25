@@ -5,4 +5,4 @@ gemspec
 gem "rake"
 gem "mongoid", github: 'mongoid'
 
-gem "rspec", "~> 2.11"
+gem "rspec", "~> 3.0.0.beta2"
