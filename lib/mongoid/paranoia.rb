@@ -20,7 +20,6 @@ module Mongoid
 
     included do
       field :deleted_at, type: Time
-      class_attribute :paranoid
       self.paranoid = true
 
       default_scope -> { where(deleted_at: nil) }
