@@ -1,3 +1,21 @@
+# encoding: utf-8
+module Mongoid
+  module Paranoia
+    module Document
+      extend ActiveSupport::Concern
+
+      included do
+        # Indicates whether or not the document includes Mongoid::Paranoia.
+        # In Mongoid 3, this method was defined on all Mongoid::Documents.
+        # In Mongoid 4, it is no longer defined, hence we are shimming it here.
+        class_attribute :paranoid
+      end
+    end
+  end
+end
+
+Mongoid::Document.send(:include, Mongoid::Paranoia::Document)
+
 module Mongoid
   module Relations
     module Builders
@@ -18,7 +36,7 @@ module Mongoid
           # @since 3.0.10
           def destroy(parent, relation, doc)
             doc.flagged_for_destroy = true
-            if !doc.embedded? || parent.new_record? || doc.respond_to?(:paranoid)
+            if !doc.embedded? || parent.new_record? || doc.paranoid?
               destroy_document(relation, doc)
             else
               parent.flagged_destroys.push(->{ destroy_document(relation, doc) })
@@ -51,9 +69,9 @@ module Mongoid
           execute_callback :before_remove, document
           doc = target.delete_one(document)
           if doc && !_binding?
-            _unscoped.delete_one(doc) unless doc.respond_to?(:paranoid)
+            _unscoped.delete_one(doc) unless doc.paranoid?
             if _assigning?
-              if doc.respond_to?(:paranoid)
+              if doc.paranoid?
                 doc.destroy(suppress: true)
               else
                 base.add_atomic_pull(doc)
