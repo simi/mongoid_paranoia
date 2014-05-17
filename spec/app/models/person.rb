@@ -17,7 +17,7 @@ class Person
   field :map_with_default, type: Hash, default: {}
   field :score, type: Integer
   field :blood_alcohol_content, type: Float, default: ->{ 0.0 }
-  field :last_drink_taken_at, type: Date, default: ->{ 1.day.ago.in_time_zone("Alaska") }
+  field :last_drink_taken_at, type: Date
   field :ssn
   field :owner_id, type: Integer
   field :security_code
