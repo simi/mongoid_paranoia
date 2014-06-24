@@ -125,6 +125,30 @@ module Mongoid
       new_record? ? nil : to_key.join('-')
     end
 
+    def restore_associated
+      d2 = Array.new
+      d1 = self.class.relations.each_with_index do |(key,value) ,index|
+        if value[:dependent] == :destroy
+          d2.push value 
+        end
+      end
+
+      d2.each do |association|
+        assoc_data = self.send(association.name)
+        unless assoc_data.nil?
+          if assoc_data.paranoid?
+            if assoc_data.is_a? Array
+              assoc_data.deleted.each do |record|
+                record.restore
+              end
+            else
+              assoc_data.restore
+            end
+          end
+        end
+      end
+    end
+
     private
 
     # Get the collection to be used for paranoid operations.
@@ -150,5 +174,7 @@ module Mongoid
     def paranoid_field
       embedded? ? "#{atomic_position}.deleted_at" : "deleted_at"
     end
+
+    
   end
 end

@@ -3,10 +3,23 @@ require "spec_helper"
 describe Mongoid::Paranoia do
 
   describe ".scoped" do
-
     it "returns a scoped criteria" do
       expect(ParanoidPost.scoped.selector).to eq({ "deleted_at" => nil })
     end
+  end
+
+  describe "restore_associated" do
+			let!(:parent) { Parent.create(name: "test_parent") }
+			let!(:child) { parent.children.create(name: 'test_child')}
+
+			before do
+        parent.destroy
+        parent.restore
+			end
+
+      it "restores associated documents" do
+        expect{parent.restore_associated}.to change{Child.count}.by(1)
+      end      
   end
 
   describe ".deleted" do
