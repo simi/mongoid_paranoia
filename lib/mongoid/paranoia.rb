@@ -126,27 +126,30 @@ module Mongoid
     end
 
     def restore_associated
-      d2 = Array.new
-      d1 = self.class.relations.each_with_index do |(key,value) ,index|
-        if value[:dependent] == :destroy
-          d2.push value 
-        end
-      end
+      # p "$$$$$$$$$$$$$$$$$$$$$$$"
+      # p self.class
+      # p self.class.methods.include?(:relations)
+      # return unless self.class.methods.include?(:relations)
 
-      d2.each do |association|
-        assoc_data = self.send(association.name)
-        unless assoc_data.nil?
-          if assoc_data.paranoid?
-            if assoc_data.is_a? Array
-              assoc_data.deleted.each do |record|
-                record.restore
-              end
-            else
-              assoc_data.restore
-            end
-          end
-        end
-      end
+      # associations = self.class.relations.select do |key,value|
+      #   value[:dependent] == :destroy
+      # end 
+      # p associations
+
+      # associations.values.each do |association|
+      #   assoc_data = self.send(association.name)
+      #   unless assoc_data.nil?
+      #     if assoc_data.paranoid?
+      #       if assoc_data.is_a? Array
+      #         assoc_data.deleted.each do |record|
+      #           record.restore
+      #         end
+      #       else
+      #         assoc_data.restore
+      #       end
+      #     end
+      #   end
+      # end
     end
 
     private
