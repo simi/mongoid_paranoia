@@ -8,6 +8,7 @@ describe Mongoid::Paranoia do
     end
   end
 
+
   describe "restore_associated" do
     let!(:parent) { Parent.create(name: "test_parent") }
     let!(:child) { parent.children.create(name: 'test_child')}

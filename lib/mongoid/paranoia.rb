@@ -130,11 +130,9 @@ module Mongoid
 
     def restore_associated
       return if self.associations.nil?
-    
       associations = self.associations.select do |key,value|
         value[:dependent] == :destroy
-      end 
-
+      end
       associations.values.each do |association|
         assoc_data = self.send(association.name)
         unless assoc_data.nil?
