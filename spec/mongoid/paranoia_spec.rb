@@ -9,17 +9,17 @@ describe Mongoid::Paranoia do
   end
 
   describe "restore_associated" do
-			let!(:parent) { Parent.create(name: "test_parent") }
-			let!(:child) { parent.children.create(name: 'test_child')}
+    let!(:parent) { Parent.create(name: "test_parent") }
+    let!(:child) { parent.children.create(name: 'test_child')}
 
-			before do
-        parent.destroy
-        parent.restore
-			end
+    before do
+      parent.destroy
+      parent.restore
+    end
 
-      it "restores associated documents" do
-        expect{parent.restore_associated}.to change{Child.count}.by(1)
-      end      
+    it "restores associated documents" do
+      expect{parent.restore_associated}.to change{Child.count}.by(1)
+    end      
   end
 
   describe ".deleted" do
