@@ -91,7 +91,7 @@ end
 
 ## Authors
 
-* extracted from [Mongoid](github.com/mongoid/mongoid) by [@simi](https://github.com/simi)
+* extracted from [Mongoid](https://github.com/mongoid/mongoid) by [@simi](https://github.com/simi)
 * [documentation improvements](https://github.com/simi/mongoid-paranoia/pull/3) by awesome [@loopj](https://github.com/loopj)
 * [latest mongoid support, restore_callback support](https://github.com/simi/mongoid-paranoia/pull/8) by fabulous [@zhouguangming](https://github.com/zhouguangming)
 
