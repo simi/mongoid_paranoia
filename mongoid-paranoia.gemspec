@@ -1,4 +1,9 @@
 # -*- encoding: utf-8 -*-
+
+# This is a legacy gemspec intended to facilitate migration from the old
+# mongoid-paranoia name to the new mongoid_paranoia name. We can delete
+# this file around October 2014
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
