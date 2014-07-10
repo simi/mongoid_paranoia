@@ -4,12 +4,12 @@
 # mongoid-paranoia name to the new mongoid_paranoia name. We can delete
 # this file around October 2014
 
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$:.push File.expand_path('../lib', __FILE__)
+require 'mongoid/paranoia/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "mongoid-paranoia"
-  gem.version       = "0.1"
+  gem.version       = Mongoid::Paranoia::VERSION
   gem.authors       = ["Durran Jordan", "Josef Šimánek"]
   gem.email         = ["durran@gmail.com", "retro@ballgag.cz"]
   gem.description   = %q{There may be times when you don't want documents to actually get deleted from the database, but "flagged" as deleted. Mongoid provides a Paranoia module to give you just that.}
