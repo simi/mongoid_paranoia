@@ -2,7 +2,7 @@
 
 `Mongoid::Paranoia` enables a "soft delete" of Mongoid documents. Instead of being removed from the database, paranoid docs are flagged with a `deleted_at` timestamp and are ignored from queries by default.
 
-The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/simi/mongoid-paranoia/tree/3.0.0-stable)
+The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/simi/mongoid-paranoia/tree/3.0.0-stable). This gem should not be used with Mongoid versions 3.x and prior.
 
 **Caution:** This repo/gem `mongoid_paranoia` (underscored) is different than `mongoid-paranoia` (hyphenated).
 The owner of `mongoid-paranoia` (hyphenated) is not accepting enhancements and has declined our requests
