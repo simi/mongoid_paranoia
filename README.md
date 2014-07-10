@@ -1,15 +1,21 @@
 # Paranoid Documents for Mongoid 4 [![Build Status](https://travis-ci.org/simi/mongoid-paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid-paranoia)
 
-There may be times when you don't want documents to actually get deleted from the database, but "flagged" as deleted. Mongoid-paranoia provides a Paranoia module to give you just that.
+There may be times when you don't want documents to actually get deleted from the database, but "flagged" as deleted. Mongoid Paranoia provides a Paranoia module to give you just that.
 
 **Old API** from Mongoid 3.0 is extracted in [3.0.0-stable branch](https://github.com/simi/mongoid-paranoia/tree/3.0.0-stable) and **doesn't work** with **Mongoid 4** anymore.
+
+#### Caution
+
+This repo/gem `mongoid_paranoia` (underscored) is different than `mongoid-paranoia` (hyphenated).
+The owner of `mongoid-paranoia` (hyphenated) is not accepting enhancements and has declined our requests
+to share maintenance of the gem.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mongoid-paranoia', github: 'simi/mongoid-paranoia' # before first release
+gem 'mongoid_paranoia'
 ```
 
 ## Changes in 4.0

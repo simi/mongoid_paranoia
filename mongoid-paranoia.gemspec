@@ -16,5 +16,11 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.post_install_message = %Q(
+    This repo has moved to `mongoid_paranoia` (with an underscore). Please use our
+    officially released gem with this name. Note that `mongoid-paranoia` (hyphenated)
+    is a different gem/repo whose owner is not accepting enhancements.
+  )
+
   gem.add_dependency "mongoid", '> 3'
 end
