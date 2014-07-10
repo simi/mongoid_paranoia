@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.files         = Dir.glob('lib/**/*') + %w(LICENSE README.md)
-  gem.test_files    = Dir.glob('spec/**/*')
+  gem.test_files    = Dir.glob('{perf,spec}/**/*')
   gem.require_paths = ['lib']
 
   gem.add_dependency 'mongoid', '> 3'
