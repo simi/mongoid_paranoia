@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 
-gemspec
+# remove :name arg when migration to '_' gem name is complete
+gemspec name: 'mongoid_paranoia'
 
-gem "rake"
-gem "mongoid", github: 'mongoid'
+gem 'rake'
+gem 'mongoid', '>= 4.0.0'
 
-gem "rspec", "~> 3.0.0.beta2"
+gem 'rspec', '~> 3.0.0'
