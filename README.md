@@ -1,8 +1,8 @@
-# Paranoid Documents for Mongoid 4 [![Build Status](https://travis-ci.org/simi/mongoid-paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid-paranoia)
+# Paranoid Documents for Mongoid 4 [![Build Status](https://travis-ci.org/simi/mongoid_paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid_paranoia)
 
 `Mongoid::Paranoia` enables a "soft delete" of Mongoid documents. Instead of being removed from the database, paranoid docs are flagged with a `deleted_at` timestamp and are ignored from queries by default.
 
-The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/simi/mongoid-paranoia/tree/3.0.0-stable). This gem should not be used with Mongoid versions 3.x and prior.
+The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/mongoid/mongoid/tree/3.0.0-stable). This gem should not be used with Mongoid versions 3.x and prior.
 
 **Caution:** This repo/gem `mongoid_paranoia` (underscored) is different than `mongoid-paranoia` (hyphenated).
 The owner of `mongoid-paranoia` (hyphenated) is not accepting enhancements and has declined our requests
@@ -58,7 +58,7 @@ You can also access all documents (both deleted and non-deleted) at any time by 
 Person.unscoped.all # Returns all documents, both deleted and non-deleted
 ```
 
-### Callbacks ([@zhouguangming](https://github.com/zhouguangming))
+### Callbacks
 
 `before_restore`, `after_restore` and `around_restore` callbacks are added to your model. They work similarly to the `before_destroy`, `after_destroy` and `around_destroy` callbacks.
 
@@ -90,15 +90,15 @@ end
 ```
 
 ## TODO
-- get rid of [monkey_patches.rb](https://github.com/simi/mongoid-paranoia/blob/master/lib/mongoid/paranoia/monkey_patches.rb)
-- [review persisted? behaviour](https://github.com/simi/mongoid-paranoia/issues/2)
+- get rid of [monkey_patches.rb](https://github.com/simi/mongoid_paranoia/blob/master/lib/mongoid/paranoia/monkey_patches.rb)
+- [review persisted? behaviour](https://github.com/simi/mongoid_paranoia/issues/2)
 
 ## Authors
 
 * original [Mongoid](https://github.com/mongoid/mongoid) implementation by [@durran](https://github.com/durran)
 * extracted from [Mongoid](https://github.com/mongoid/mongoid) by [@simi](https://github.com/simi)
-* [documentation improvements](https://github.com/simi/mongoid-paranoia/pull/3) by awesome [@loopj](https://github.com/loopj)
-* [latest mongoid support, restore_callback support](https://github.com/simi/mongoid-paranoia/pull/8) by fabulous [@zhouguangming](https://github.com/zhouguangming)
+* [documentation improvements](https://github.com/simi/mongoid_paranoia/pull/3) by awesome [@loopj](https://github.com/loopj)
+* [latest mongoid support, restore_callback support](https://github.com/simi/mongoid_paranoia/pull/8) by fabulous [@zhouguangming](https://github.com/zhouguangming)
 
 
 ## Contributing
