@@ -3,24 +3,10 @@ require "spec_helper"
 describe Mongoid::Paranoia do
 
   describe ".scoped" do
+
     it "returns a scoped criteria" do
       expect(ParanoidPost.scoped.selector).to eq({ "deleted_at" => nil })
     end
-  end
-
-
-  describe "restore_associated" do
-    let!(:parent) { Parent.create(name: "test_parent") }
-    let!(:child) { parent.children.create(name: 'test_child')}
-
-    before do
-      parent.destroy
-      parent.restore
-    end
-
-    it "restores associated documents" do
-      expect{parent.restore_associated}.to change{Child.count}.by(1)
-    end      
   end
 
   describe ".deleted" do
@@ -657,7 +643,6 @@ describe Mongoid::Paranoia do
           expect(post.around_after_restore_called).to be_truthy
         end
       end
-
     end
 
     context "when the document is embedded" do
@@ -682,6 +667,84 @@ describe Mongoid::Paranoia do
       it "persists the change" do
         expect(person.reload.paranoid_phones.first.deleted_at).to be_nil
       end
+    end
+  end
+
+  describe "#restore_relations" do
+
+    subject { ParaBase.create }
+
+    let!(:para_has_one)     { subject.para_has_one = ParaHasOne.create       }
+    let!(:para_has_many)    { 2.times.map { subject.para_has_many.create }   }
+    let!(:para_habtm)       { 3.times.map { subject.para_habtm.create }      }
+    let!(:para_belongs_to)  { subject.para_belongs_to = ParaBelongsTo.create }
+    let!(:para_embeds_one)  { subject.para_embeds_one = ParaEmbedsOne.new    }
+    let!(:para_embeds_many) { 2.times.map { subject.para_embeds_many.build } }
+
+    let!(:norm_has_one)     { subject.norm_has_one = NormHasOne.create       }
+    let!(:norm_has_many)    { 2.times.map { subject.norm_has_many.create }   }
+    let!(:norm_habtm)       { 3.times.map { subject.norm_habtm.create }      }
+    let!(:norm_belongs_to)  { subject.norm_belongs_to = NormBelongsTo.create }
+    let!(:norm_embeds_one)  { subject.norm_embeds_one = NormEmbedsOne.new    }
+    let!(:norm_embeds_many) { 2.times.map { subject.norm_embeds_many.build } }
+
+    let(:prepare) do
+      subject.destroy
+      subject.restore
+    end
+
+    context "restores paranoid associations" do
+      before { prepare }
+
+      it { expect{ subject.restore_relations}.to change{ ParaHasOne.count    }.by(1) }
+      it { expect{ subject.restore_relations}.to change{ ParaHasMany.count   }.by(2) }
+      it { expect{ subject.restore_relations}.to change{ ParaHabtm.count     }.by(3) }
+      it { expect{ subject.restore_relations}.to change{ ParaBelongsTo.count }.by(1) }
+    end
+
+    context "does not affect embedded paranoid documents" do
+      before { prepare }
+
+      it { expect{ subject.restore_relations}.to_not change{ subject.para_embeds_one } }
+      it { expect{ subject.restore_relations}.to_not change{ subject.para_embeds_many.count } }
+    end
+
+    context "does not affect non-paranoid documents" do
+      before { prepare }
+
+      it { expect{ subject.restore_relations}.to_not change{ NormHasOne.count    } }
+      it { expect{ subject.restore_relations}.to_not change{ NormHasMany.count   } }
+      it { expect{ subject.restore_relations}.to_not change{ NormHabtm.count     } }
+      it { expect{ subject.restore_relations}.to_not change{ NormBelongsTo.count } }
+      it { expect{ subject.restore_relations}.to_not change{ subject.norm_embeds_one } }
+      it { expect{ subject.restore_relations}.to_not change{ subject.norm_embeds_many.count } }
+    end
+
+    context "recursion" do
+
+      let!(:para_habtm_norm_has_one)  { subject.para_habtm.first.norm_has_one = NormHasOne.create  } # not restored
+      let!(:para_habtm_para_has_one)  { subject.para_habtm.first.para_has_one = ParaHasOne.create  } # restored
+      let!(:para_habtm_norm_has_many) { 2.times.map { subject.para_habtm.first.norm_has_many  = NormHasMany.create } } # not restored
+      let!(:para_habtm_para_has_many) { 3.times.map { subject.para_habtm.second.para_has_many = ParaHasMany.create } } # restored
+
+      # Untestable due to infinite recursion condition in #destroy
+      # let!(:para_habtm_norm_habtm)    { 3.times.map { subject.para_habtm.second.norm_habtm.create } } # not restored
+      # let!(:para_habtm_recursive)     { 2.times.map { subject.para_habtm.first.recursive.create }   } # restored
+
+      before do
+        subject.destroy
+        subject.restore
+      end
+
+      it { expect{ subject.restore_relations}.to change { ParaHasOne.count  }.by(2) }
+      it { expect{ subject.restore_relations}.to change { ParaHasMany.count }.by(3) }
+
+      # Untestable due to infinite recursion condition in #destroy
+      # it { expect{ ParaHabtm.unscoped.each(&:restore)}.to change { ParaHabtm.count }.by(5) }
+
+      it { expect{ subject.restore_relations}.to_not change { NormHasOne.count  } }
+      it { expect{ subject.restore_relations}.to_not change { NormHasMany.count } }
+      it { expect{ subject.restore_relations}.to_not change { NormHabtm.count   } }
     end
   end
 

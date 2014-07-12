@@ -106,9 +106,11 @@ module Mongoid
     #
     # @example Restore the document from deleted state.
     #   document.restore
+    #
     # For resoring associated documents use :recursive => true
     # @example Restore the associated documents from deleted state.
     #   document.restore(:recursive => true)
+    #
     # TODO: @return [ Time ] The time the document had been deleted.
     #
     # @since 1.0.0
@@ -118,7 +120,7 @@ module Mongoid
           update({ "$unset" => { paranoid_field => true }})
         attributes.delete("deleted_at")
         @destroyed = false
-        restore_associated if opts[:recursive]
+        restore_relations if opts[:recursive]
         true
       end
     end
@@ -128,22 +130,13 @@ module Mongoid
       new_record? ? nil : to_key.join('-')
     end
 
-    def restore_associated
-      return if self.associations.nil?
-      associations = self.associations.select do |key,value|
-        value[:dependent] == :destroy
-      end
-      associations.values.each do |association|
-        assoc_data = self.send(association.name)
-        unless assoc_data.nil?
-          if assoc_data.paranoid?
-            if assoc_data.is_a? Array
-              assoc_data.deleted.each do |record|
-                record.restore(:recursive => true)
-              end
-            else
-              assoc_data.restore(:recursive => true)
-            end
+    def restore_relations
+      self.relations.each_pair do |name, metadata|
+        next unless metadata[:dependent] == :destroy
+        relation = self.send(name)
+        if relation.present? && relation.paranoid?
+          Array.wrap(relation).each do |doc|
+            doc.restore(:recursive => true)
           end
         end
       end
@@ -174,7 +167,5 @@ module Mongoid
     def paranoid_field
       embedded? ? "#{atomic_position}.deleted_at" : "deleted_at"
     end
-
-    
   end
 end
