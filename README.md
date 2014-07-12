@@ -44,6 +44,7 @@ person.delete!  # Permanently deletes the document, ignoring callbacks.
 person.destroy  # Sets the deleted_at field to the current time, firing callbacks.
 person.destroy! # Permanently deletes the document, firing callbacks.
 person.restore  # Brings the "deleted" document back to life.
+person.restore(:recursive => true) # Brings "deleted" associated documents back to life recursively
 ```
 
 The documents that have been "flagged" as deleted (soft deleted) can be accessed at any time by calling the deleted class method on the class.
