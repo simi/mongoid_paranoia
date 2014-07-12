@@ -99,6 +99,7 @@ end
 * extracted from [Mongoid](https://github.com/mongoid/mongoid) by [@simi](https://github.com/simi)
 * [documentation improvements](https://github.com/simi/mongoid_paranoia/pull/3) by awesome [@loopj](https://github.com/loopj)
 * [latest mongoid support, restore_callback support](https://github.com/simi/mongoid_paranoia/pull/8) by fabulous [@zhouguangming](https://github.com/zhouguangming)
+* first public gem release prepared by fantastic [@johnnyshields](https://github.com/johnnyshields)
 
 
 ## Contributing
