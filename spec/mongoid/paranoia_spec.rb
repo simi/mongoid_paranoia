@@ -582,6 +582,81 @@ describe Mongoid::Paranoia do
         expect(post).not_to be_destroyed
       end
     end
+
+    context "cascading" do
+
+      let(:prepare) do
+        subject.destroy
+        subject.restore
+      end
+
+      context "non-paranoid base document" do
+
+        subject { NormBase.create }
+
+        let!(:para_has_one)     { subject.para_has_one = ParaHasOne.create       }
+        let!(:para_has_many)    { 2.times.map { subject.para_has_many.create }   }
+        let!(:para_habtm)       { 3.times.map { subject.para_habtm.create }      }
+        let!(:para_belongs_to)  { subject.para_belongs_to = ParaBelongsTo.create }
+        let!(:para_embeds_one)  { subject.para_embeds_one = ParaEmbedsOne.new    }
+        let!(:para_embeds_many) { 2.times.map { subject.para_embeds_many.build } }
+
+        let!(:norm_has_one)     { subject.norm_has_one = NormHasOne.create       }
+        let!(:norm_has_many)    { 2.times.map { subject.norm_has_many.create }   }
+        let!(:norm_habtm)       { 3.times.map { subject.norm_habtm.create }      }
+        let!(:norm_belongs_to)  { subject.norm_belongs_to = NormBelongsTo.create }
+        let!(:norm_embeds_one)  { subject.norm_embeds_one = NormEmbedsOne.new    }
+        let!(:norm_embeds_many) { 2.times.map { subject.norm_embeds_many.build } }
+
+        before { subject.destroy }
+
+      end
+
+      context "paranoid base document" do
+
+        subject { ParaBase.create }
+
+        # let!(:para_has_one)     { subject.para_has_one = ParaHasOne.create       }
+        # let!(:para_has_many)    { 2.times.map { subject.para_has_many.create }   }
+        let!(:para_habtm)       { 3.times.map { subject.para_habtm.create }      }
+        # let!(:para_belongs_to)  { subject.para_belongs_to = ParaBelongsTo.create }
+        # let!(:para_embeds_one)  { subject.para_embeds_one = ParaEmbedsOne.new    }
+        # let!(:para_embeds_many) { 2.times.map { subject.para_embeds_many.build } }
+
+        # let!(:norm_has_one)     { subject.norm_has_one = NormHasOne.create       }
+        # let!(:norm_has_many)    { 2.times.map { subject.norm_has_many.create }   }
+        let!(:norm_habtm)       { 3.times.map { subject.norm_habtm.create }      }
+        # let!(:norm_belongs_to)  { subject.norm_belongs_to = NormBelongsTo.create }
+        # let!(:norm_embeds_one)  { subject.norm_embeds_one = NormEmbedsOne.new    }
+        # let!(:norm_embeds_many) { 2.times.map { subject.norm_embeds_many.build } }
+
+        let!(:norm_habtm_recursive)     { 2.times.map { subject.norm_habtm.first.recursive.build }   }
+        let!(:norm_habtm_para_habtm)    { 3.times.map { subject.norm_habtm.second.para_habtm.build } }
+        # let!(:norm_habtm_norm_has_one)  { subject.norm_habtm.first.norm_has_one = NormHasOne.create  }
+        # let!(:norm_habtm_para_has_one)  { subject.norm_habtm.first.para_has_one = ParaHasOne.create  }
+        # let!(:norm_habtm_norm_has_many) { 2.times.map { subject.norm_habtm.first.norm_has_many  = NormHasMany.create } }
+        # let!(:norm_habtm_para_has_many) { 3.times.map { subject.norm_habtm.second.para_has_many = ParaHasMany.create } }
+
+        let!(:para_habtm_norm_habtm)    { 3.times.map { subject.para_habtm.second.norm_habtm.build } }
+        let!(:para_habtm_recursive)     { 2.times.map { subject.para_habtm.first.recursive.build }   }
+        let!(:para_habtm_norm_has_one)  { subject.para_habtm.first.norm_has_one = NormHasOne.create  }
+        let!(:para_habtm_para_has_one)  { subject.para_habtm.first.para_has_one = ParaHasOne.create  }
+        let!(:para_habtm_norm_has_many) { 2.times.map { subject.para_habtm.first.norm_has_many  = NormHasMany.create } }
+        let!(:para_habtm_para_has_many) { 3.times.map { subject.para_habtm.second.para_has_many = ParaHasMany.create } }
+
+        it "should cascade dependent (paranoid) destroy of paranoid documents" do
+          expect{subject.destroy}.to change{ ParaHasOne.unscoped.count  }.by(1)
+          expect{subject.destroy}.to change{ ParaHasMany.unscoped.count }.by(1)
+          expect{subject.destroy}.to change{ ParaHabtm.unscoped.count   }.by(1)
+        end
+
+        it "should cascade dependent destroy of non-paranoid documents" do
+          expect{subject.destroy}.to change{ NormHasOne.unscoped.count }.by(1)
+          expect{subject.destroy}.to change{ NormHasMany.unscoped.count }.by(1)
+          expect{subject.destroy}.to change{ NormHabtm.unscoped.count }.by(1)
+        end
+      end
+    end
   end
 
   describe "#remove" do
