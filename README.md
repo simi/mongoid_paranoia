@@ -59,6 +59,16 @@ You can also access all documents (both deleted and non-deleted) at any time by 
 Person.unscoped.all # Returns all documents, both deleted and non-deleted
 ```
 
+You can also configure the paranoid field naming on a global basis.  Within the context of a Rails app this is done via an initializer.
+
+```ruby
+# config/initializers/mongoid_paranoid.rb
+
+Mongoid::Paranoia.configure do |c|
+  c.paranoid_field = :myFieldName
+end
+```
+
 ### Callbacks
 
 #### Restore
@@ -72,7 +82,7 @@ Person.unscoped.all # Returns all documents, both deleted and non-deleted
 class User
   include Mongoid::Document
   include Mongoid::Paranoia
-  
+
   before_restore :before_restore_action
   after_restore  :after_restore_action
   around_restore :around_restore_action
@@ -86,7 +96,7 @@ class User
   def after_restore_action
     puts "AFTER"
   end
-  
+
   def around_restore_action
     puts "AROUND - BEFORE"
     yield # restoring
