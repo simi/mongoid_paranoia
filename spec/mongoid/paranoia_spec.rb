@@ -82,6 +82,14 @@ describe Mongoid::Paranoia do
       it "executes the after destroy callbacks" do
         expect(post.after_destroy_called).to be_truthy
       end
+
+      it "executes the before remove callbacks" do
+        expect(post.before_remove_called).to be_truthy
+      end
+
+      it "executes the after remove callbacks" do
+        expect(post.after_remove_called).to be_truthy
+      end
     end
 
     context "when the document is embedded" do
@@ -173,6 +181,14 @@ describe Mongoid::Paranoia do
 
       it "executes the after destroy callbacks" do
         expect(post.after_destroy_called).to be_truthy
+      end
+
+      it "does not execute the before remove callbacks" do
+        expect(post.before_remove_called).to be_falsey
+      end
+
+      it "does not execute the after remove callbacks" do
+        expect(post.after_remove_called).to be_falsey
       end
     end
 

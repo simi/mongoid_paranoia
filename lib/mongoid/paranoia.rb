@@ -25,6 +25,7 @@ module Mongoid
       default_scope -> { where(deleted_at: nil) }
       scope :deleted, -> { ne(deleted_at: nil) }
       define_model_callbacks :restore
+      define_model_callbacks :remove
     end
 
     # Delete the paranoid +Document+ from the database completely. This will
@@ -37,7 +38,11 @@ module Mongoid
     #
     # @since 1.0.0
     def destroy!
-      run_callbacks(:destroy) { delete! }
+      run_callbacks(:destroy) do
+        run_callbacks(:remove) do
+          delete!
+        end
+      end
     end
 
     # Override the persisted method to allow for the paranoia gem.
