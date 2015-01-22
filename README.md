@@ -61,8 +61,13 @@ Person.unscoped.all # Returns all documents, both deleted and non-deleted
 
 ### Callbacks
 
-`before_restore`, `after_restore` and `around_restore` callbacks are added to your model. They work similarly to the `before_destroy`, `after_destroy` and `around_destroy` callbacks. Also `before_remove`, `after_remove` and `around_remove` are added, they are only called when permanently deleting a record.
+#### Restore
+`before_restore`, `after_restore` and `around_restore` callbacks are added to your model. They work similarly to the `before_destroy`, `after_destroy` and `around_destroy` callbacks.
 
+#### Remove
+`before_remove`, `after_remove` and `around_remove` are added, they are only called when record is deleted permanently .
+
+#### Example
 ```ruby
 class User
   include Mongoid::Document
