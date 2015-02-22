@@ -688,25 +688,26 @@ describe Mongoid::Paranoia do
 
   describe "#restore_relations" do
 
-    subject { ParaBase.create }
+    subject { ParaBase.find(para_base.id) }
 
-    let!(:para_has_one)     { subject.para_has_one = ParaHasOne.create       }
-    let!(:para_has_many)    { 2.times.map { subject.para_has_many.create }   }
-    let!(:para_habtm)       { 3.times.map { subject.para_habtm.create }      }
-    let!(:para_belongs_to)  { subject.para_belongs_to = ParaBelongsTo.create }
-    let!(:para_embeds_one)  { subject.para_embeds_one = ParaEmbedsOne.new    }
-    let!(:para_embeds_many) { 2.times.map { subject.para_embeds_many.build } }
+    let(:para_base) { ParaBase.create }
+    let!(:para_has_one)     { para_base.update(para_has_one: ParaHasOne.create)       }
+    let!(:para_has_many)    { 2.times.map { para_base.para_has_many.create          } }
+    let!(:para_habtm)       { 3.times.map { para_base.para_habtm.create             } }
+    let!(:para_belongs_to)  { para_base.update(para_belongs_to: ParaBelongsTo.create) }
+    let!(:para_embeds_one)  { para_base.update(para_embeds_one: ParaEmbedsOne.new)    }
+    let!(:para_embeds_many) { 2.times.map { para_base.para_embeds_many.create       } }
 
-    let!(:norm_has_one)     { subject.norm_has_one = NormHasOne.create       }
-    let!(:norm_has_many)    { 2.times.map { subject.norm_has_many.create }   }
-    let!(:norm_habtm)       { 3.times.map { subject.norm_habtm.create }      }
-    let!(:norm_belongs_to)  { subject.norm_belongs_to = NormBelongsTo.create }
-    let!(:norm_embeds_one)  { subject.norm_embeds_one = NormEmbedsOne.new    }
-    let!(:norm_embeds_many) { 2.times.map { subject.norm_embeds_many.build } }
+    let!(:norm_has_one)     { para_base.update(norm_has_one: NormHasOne.create)       }
+    let!(:norm_has_many)    { 2.times.map { para_base.norm_has_many.create          } }
+    let!(:norm_habtm)       { 3.times.map { para_base.norm_habtm.create             } }
+    let!(:norm_belongs_to)  { para_base.update(norm_belongs_to: NormBelongsTo.create) }
+    let!(:norm_embeds_one)  { para_base.update(norm_embeds_one: NormEmbedsOne.new)    }
+    let!(:norm_embeds_many) { 2.times.map { para_base.norm_embeds_many.build        } }
 
     let(:prepare) do
-      subject.destroy
-      subject.restore
+      para_base.destroy
+      para_base.restore
     end
 
     context "restores paranoid associations" do
@@ -738,18 +739,18 @@ describe Mongoid::Paranoia do
 
     context "recursion" do
 
-      let!(:para_habtm_norm_has_one)  { subject.para_habtm.first.norm_has_one = NormHasOne.create  } # not restored
-      let!(:para_habtm_para_has_one)  { subject.para_habtm.first.para_has_one = ParaHasOne.create  } # restored
-      let!(:para_habtm_norm_has_many) { 2.times.map { subject.para_habtm.first.norm_has_many  = NormHasMany.create } } # not restored
-      let!(:para_habtm_para_has_many) { 3.times.map { subject.para_habtm.second.para_has_many = ParaHasMany.create } } # restored
+      let!(:para_habtm_norm_has_one)  { para_base.para_habtm.first.update(norm_has_one: NormHasOne.create) } # not restored
+      let!(:para_habtm_para_has_one)  { para_base.para_habtm.first.update(para_has_one: ParaHasOne.create) } # restored
+      let!(:para_habtm_norm_has_many) { 2.times.map { para_base.para_habtm.first.update(norm_has_many: NormHasMany.create) } } # not restored
+      let!(:para_habtm_para_has_many) { 3.times.map { para_base.para_habtm.second.update(para_has_many: ParaHasMany.create) } } # restored
 
       # Untestable due to infinite recursion condition in #destroy
       # let!(:para_habtm_norm_habtm)    { 3.times.map { subject.para_habtm.second.norm_habtm.create } } # not restored
       # let!(:para_habtm_recursive)     { 2.times.map { subject.para_habtm.first.recursive.create }   } # restored
 
       before do
-        subject.destroy
-        subject.restore
+        para_base.destroy
+        para_base.restore
       end
 
       it { expect{ subject.restore_relations}.to change { ParaHasOne.count  }.by(2) }

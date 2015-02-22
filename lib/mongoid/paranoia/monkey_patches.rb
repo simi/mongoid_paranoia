@@ -111,3 +111,26 @@ module Mongoid
     end
   end
 end
+
+module Mongoid
+  module Relations
+    module Synchronization
+      # Update the inverse keys on destroy.
+      #
+      # @example Update the inverse keys.
+      #   document.remove_inverse_keys(metadata)
+      #
+      # @param [ Metadata ] meta The document metadata.
+      #
+      # @return [ Object ] The updated values.
+      #
+      # @since 2.2.1
+      def remove_inverse_keys(meta)
+        foreign_keys = send(meta.foreign_key)
+        unless foreign_keys.nil? || foreign_keys.empty? || self.paranoid?
+          meta.criteria(foreign_keys, self.class).pull(meta.inverse_foreign_key => _id)
+        end
+      end
+    end
+  end
+end
