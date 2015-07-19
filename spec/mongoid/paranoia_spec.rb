@@ -1,6 +1,49 @@
 require "spec_helper"
 
 describe Mongoid::Paranoia do
+  context 'configuring the paranoid_field setting' do
+    before do
+      Mongoid::Paranoia.configure do |c|
+        c.paranoid_field = :myFieldName
+      end
+    end
+
+    describe '.configure' do
+      before do
+        class ParanoidConfigured
+          include Mongoid::Document
+          include Mongoid::Paranoia
+        end
+      end
+
+      it 'allows custom setting of the paranoid_field' do
+        paranoid_configured = ParanoidConfigured.new
+        expect(paranoid_configured.attribute_names).to include('myFieldName')
+      end
+
+      after(:each) do
+        Mongoid::Paranoia.reset
+      end
+    end
+
+    describe '.reset' do
+      before do
+        Mongoid::Paranoia.reset
+
+        # the configuration gets set at include time
+        # so you need to reset before defining a new class
+        class ParanoidConfiguredReset
+          include Mongoid::Document
+          include Mongoid::Paranoia
+        end
+      end
+
+      it 'restores the paranoid_field to the default setting' do
+        paranoid_configured = ParanoidConfiguredReset.new
+        expect(paranoid_configured.attribute_names).to include('deleted_at')
+      end
+    end
+  end
 
   describe ".scoped" do
 

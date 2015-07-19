@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'mongoid/paranoia/monkey_patches'
+require 'mongoid/paranoia/configuration'
 require 'active_support'
 require 'active_support/deprecation'
 
@@ -18,8 +19,31 @@ module Mongoid
     include Mongoid::Persistable::Deletable
     extend ActiveSupport::Concern
 
+    class << self
+      attr_accessor :configuration
+    end
+
+    def self.configuration
+      @configuration ||= Configuration.new
+    end
+
+    def self.reset
+      @configuration = Configuration.new
+    end
+
+    # Allow the paranoid +Document+ to use an alternate field name for deleted_at.
+    #
+    # @example
+    #   Mongoid::Paranoia.configure do |c|
+    #     c.paranoid_field = :myFieldName
+    #   end
+    def self.configure
+      yield(configuration)
+    end
+
     included do
-      field :deleted_at, type: Time
+      field Paranoia.configuration.paranoid_field, as: :deleted_at, type: Time
+
       self.paranoid = true
 
       default_scope -> { where(deleted_at: nil) }
@@ -170,7 +194,8 @@ module Mongoid
     #
     # @since 2.3.1
     def paranoid_field
-      embedded? ? "#{atomic_position}.deleted_at" : "deleted_at"
+      field = Paranoia.configuration.paranoid_field
+      embedded? ? "#{atomic_position}.#{field}" : field
     end
   end
 end
