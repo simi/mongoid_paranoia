@@ -98,7 +98,7 @@ module Mongoid
       cascade!
       time = self.deleted_at = Time.now
       paranoid_collection.find(atomic_selector).
-        update({ "$set" => { paranoid_field => time }})
+        update_one({ "$set" => { paranoid_field => time }})
       @destroyed = true
       true
     end
@@ -146,7 +146,7 @@ module Mongoid
     def restore(opts = {})
       run_callbacks(:restore) do
         paranoid_collection.find(atomic_selector).
-          update({ "$unset" => { paranoid_field => true }})
+          update_one({ "$unset" => { paranoid_field => true }})
         attributes.delete("deleted_at")
         @destroyed = false
         restore_relations if opts[:recursive]
