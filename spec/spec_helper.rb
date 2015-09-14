@@ -34,6 +34,10 @@ end
 # Set the database that the spec suite connects to.
 Mongoid.configure do |config|
   config.connect_to(database_id)
+
+  if defined? Mongo
+    Mongo::Logger.logger = Logger.new(File.open(File.expand_path('../../log/test.log', __FILE__), 'a+'))
+  end
 end
 
 module Rails
@@ -57,7 +61,11 @@ RSpec.configure do |config|
   # drop the database after the suite.
   config.after(:suite) do
     if ENV["CI"]
-      Mongoid::Threaded.sessions[:default].drop
+      if Mongoid::Threaded.respond_to?(:clients)
+        Mongoid::Threaded.clients[:default].drop
+      else
+        Mongoid::Threaded.sessions[:default].drop
+      end
     end
   end
 
