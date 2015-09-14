@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # remove :name arg when migration to '_' gem name is complete
-gemspec name: 'mongoid_paranoia'
+gemspec name: 'mongoid_paranoia', path: File.expand_path('..', __FILE__)
 
 gem 'rake'
 gem 'mongoid', '>= 4.0.0, < 5.0'
