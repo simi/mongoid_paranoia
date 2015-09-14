@@ -5,6 +5,9 @@ rvm:
   - 2.0.0
   - 2.1.0
   - jruby
+gemfile:
+  - Gemfile
+  - gemfiles/mongoid4.gemfile
 env: JRUBY_OPTS="--server -J-Xms512m -J-Xmx1024m"
 services:
   - mongodb
