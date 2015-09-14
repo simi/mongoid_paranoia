@@ -61,10 +61,10 @@ RSpec.configure do |config|
   # drop the database after the suite.
   config.after(:suite) do
     if ENV["CI"]
-      if defined?(Mongoid::Threaded::CLIENTS_KEY)
-        Thread.current[Mongoid::Threaded::CLIENTS_KEY][:default].drop
+      if Mongoid.respond_to?(:default_client)
+        Mongoid.default_client.database.drop
       else
-        Thread.current[Mongoid::Threaded::SESSIONS_KEY][:default].drop
+        Mongoid::Threaded.sessions[:default].drop
       end
     end
   end
