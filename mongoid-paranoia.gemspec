@@ -27,5 +27,5 @@ Gem::Specification.new do |gem|
     is a different gem/repo whose owner is not accepting enhancements.
   )
 
-  gem.add_dependency "mongoid", '> 3'
+  gem.add_dependency "mongoid", '>= 4'
 end
