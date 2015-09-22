@@ -16,5 +16,6 @@ Gem::Specification.new do |gem|
   gem.test_files    = Dir.glob('{perf,spec}/**/*')
   gem.require_paths = ['lib']
 
-  gem.add_dependency 'mongoid', '> 3'
+  gem.add_dependency 'mongoid', '>= 4'
+  gem.add_dependency 'mongoid-compatibility'
 end

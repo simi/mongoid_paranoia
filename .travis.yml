@@ -1,10 +1,17 @@
 language: ruby
-bundler_args: --without development
+
 rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.0
-  - jruby
-env: JRUBY_OPTS="--server -J-Xms512m -J-Xmx1024m"
+  - 2.2
+  - rbx-2.2.10
+  - jruby-19mode
+
+env:
+  - MONGOID_VERSION=4.0
+  - MONGOID_VERSION=5.0
+
 services:
   - mongodb
+

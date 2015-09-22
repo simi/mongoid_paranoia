@@ -53,12 +53,13 @@ RSpec.configure do |config|
     Mongoid.purge!
   end
 
-  # On travis we are creating many different databases on each test run. We
-  # drop the database after the suite.
-  config.after(:suite) do
-    if ENV["CI"]
-      Mongoid::Threaded.sessions[:default].drop
-    end
+  config.before(:all) do
+    Mongoid.logger.level = Logger::INFO
+    Mongo::Logger.logger.level = Logger::INFO if Mongoid::Compatibility::Version.mongoid5?
+  end
+
+  config.after(:all) do
+    Mongoid.purge!
   end
 
   # Filter out MongoHQ specs if we can't connect to it.

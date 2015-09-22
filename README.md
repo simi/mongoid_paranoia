@@ -1,12 +1,10 @@
-# Paranoid Documents for Mongoid 4 [![Build Status](https://travis-ci.org/simi/mongoid_paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid_paranoia)[![Gitter chat](https://badges.gitter.im/simi/mongoid_paranoia.png)](https://gitter.im/simi/mongoid_paranoia)
+# Paranoid Documents for Mongoid 4 and 5 [![Build Status](https://travis-ci.org/simi/mongoid_paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid_paranoia)[![Gitter chat](https://badges.gitter.im/simi/mongoid_paranoia.png)](https://gitter.im/simi/mongoid_paranoia)
 
 `Mongoid::Paranoia` enables a "soft delete" of Mongoid documents. Instead of being removed from the database, paranoid docs are flagged with a `deleted_at` timestamp and are ignored from queries by default.
 
 The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/mongoid/mongoid/tree/3.0.0-stable). This gem should not be used with Mongoid versions 3.x and prior.
 
-**Caution:** This repo/gem `mongoid_paranoia` (underscored) is different than `mongoid-paranoia` (hyphenated).
-The owner of `mongoid-paranoia` (hyphenated) is not accepting enhancements and has declined our requests
-to share maintenance of the gem.
+**Caution:** This repo/gem `mongoid_paranoia` (underscored) is different than [mongoid-paranoia](https://github.com/haihappen/mongoid-paranoia) (hyphenated). The goal of `mongoid-paranoia` (hyphenated) is to stay API compatible and it only accepts security fixes.
 
 ## Installation
 

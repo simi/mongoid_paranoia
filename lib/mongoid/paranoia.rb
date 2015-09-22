@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'mongoid/compatibility'
 require 'mongoid/paranoia/monkey_patches'
 require 'mongoid/paranoia/configuration'
 require 'active_support'
@@ -97,8 +98,7 @@ module Mongoid
     def remove_with_paranoia(options = {})
       cascade!
       time = self.deleted_at = Time.now
-      paranoid_collection.find(atomic_selector).
-        update({ "$set" => { paranoid_field => time }})
+      update("$set" => { paranoid_field => time })
       @destroyed = true
       true
     end
@@ -145,8 +145,7 @@ module Mongoid
     # @since 1.0.0
     def restore(opts = {})
       run_callbacks(:restore) do
-        paranoid_collection.find(atomic_selector).
-          update({ "$unset" => { paranoid_field => true }})
+        update("$unset" => { paranoid_field => true })
         attributes.delete("deleted_at")
         @destroyed = false
         restore_relations if opts[:recursive]
@@ -179,8 +178,6 @@ module Mongoid
     #   document.paranoid_collection
     #
     # @return [ Collection ] The root collection.
-    #
-    # @since 2.3.1
     def paranoid_collection
       embedded? ? _root.collection : self.collection
     end
@@ -191,11 +188,21 @@ module Mongoid
     #   document.paranoid_field
     #
     # @return [ String ] The deleted at field.
-    #
-    # @since 2.3.1
     def paranoid_field
       field = Paranoia.configuration.paranoid_field
       embedded? ? "#{atomic_position}.#{field}" : field
+    end
+
+    # Update value in the collection.
+    #
+    # @return [ Object ] Update result.
+    def update(value)
+      query = paranoid_collection.find(atomic_selector)
+      if Mongoid::Compatibility::Version.mongoid5?
+        query.update_one(value)
+      else
+        query.update(value)
+      end
     end
   end
 end
