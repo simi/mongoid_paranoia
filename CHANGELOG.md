@@ -1,4 +1,4 @@
-## 0.2.0 (Next)
+## 0.2.0 (2015/09/22)
 
 * [#38](https://github.com/simi/mongoid_paranoia/pull/38): Added support for Mongoid 5 - [@dblock](https://github.com/dblock).
 * [#29](https://github.com/simi/mongoid_paranoia/pull/29): Added `before_remove`, `after_remove` and `around_remove` callbacks - [@marcelloma](https://github.com/marcelloma).
