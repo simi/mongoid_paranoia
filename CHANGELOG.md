@@ -1,3 +1,7 @@
+## 0.2.1 (2015/09/28)
+
+* [#40](https://github.com/simi/mongoid_paranoia/pull/40): Don't override mongoid original update - [@simi](https://github.com/simi).
+
 ## 0.2.0 (2015/09/22)
 
 * [#38](https://github.com/simi/mongoid_paranoia/pull/38): Added support for Mongoid 5 - [@dblock](https://github.com/dblock).
