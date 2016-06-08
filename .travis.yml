@@ -15,3 +15,8 @@ env:
 services:
   - mongodb
 
+matrix:
+  include:
+    - rvm: 2.3.1
+      env:
+        - MONGOID_VERSION=HEAD
