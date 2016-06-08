@@ -95,14 +95,13 @@ module Mongoid
     # @return [ true ] True.
     #
     # @since 1.0.0
-    def remove_with_paranoia(options = {})
+    def remove(options = {})
       cascade!
       time = self.deleted_at = Time.now
       _paranoia_update("$set" => { paranoid_field => time })
       @destroyed = true
       true
     end
-    alias_method_chain :remove, :paranoia
     alias :delete :remove
 
     # Delete the paranoid +Document+ from the database completely.
@@ -114,7 +113,14 @@ module Mongoid
     #
     # @since 1.0.0
     def delete!
-      remove_without_paranoia
+      raise Errors::ReadonlyDocument.new(self.class) if readonly?
+      prepare_delete do
+        if embedded?
+          delete_as_embedded
+        else
+          delete_as_root
+        end
+      end
     end
 
     # Determines if this document is destroyed.
