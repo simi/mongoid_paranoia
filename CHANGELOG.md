@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Mongoid 6.0 support, dropped Mongoid 4/5 and Ruby < 2.2.2
+
 ## 0.2.1 (2015/09/28)
 
 * [#40](https://github.com/simi/mongoid_paranoia/pull/40): Don't override mongoid original update - [@simi](https://github.com/simi).

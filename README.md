@@ -1,8 +1,8 @@
-# Paranoid Documents for Mongoid 4 and 5 [![Build Status](https://travis-ci.org/simi/mongoid_paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid_paranoia)[![Gitter chat](https://badges.gitter.im/simi/mongoid_paranoia.png)](https://gitter.im/simi/mongoid_paranoia)
+# Paranoid Documents for Mongoid [![Build Status](https://travis-ci.org/simi/mongoid_paranoia.png?branch=master)](https://travis-ci.org/simi/mongoid_paranoia)[![Gitter chat](https://badges.gitter.im/simi/mongoid_paranoia.png)](https://gitter.im/simi/mongoid_paranoia)
 
 `Mongoid::Paranoia` enables a "soft delete" of Mongoid documents. Instead of being removed from the database, paranoid docs are flagged with a `deleted_at` timestamp and are ignored from queries by default.
 
-The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/mongoid/mongoid/tree/3.0.0-stable). This gem should not be used with Mongoid versions 3.x and prior.
+The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/mongoid/mongoid/tree/3.0.0-stable). This gem should not be used with Mongoid versions 3.x and prior. Current master branch targeted on Mongoid 6.0. With release 0.3.0 Mongoid 4 and 5 versions will be dropped.
 
 **Caution:** This repo/gem `mongoid_paranoia` (underscored) is different than [mongoid-paranoia](https://github.com/haihappen/mongoid-paranoia) (hyphenated). The goal of `mongoid-paranoia` (hyphenated) is to stay API compatible and it only accepts security fixes.
 
@@ -12,21 +12,6 @@ Add this line to your application's Gemfile:
 
 ```ruby
 gem 'mongoid_paranoia'
-```
-
-## Changes in 4.0
-
-### Uniqueness validator is not overriden
-
-#### Old syntax:
-```ruby
-validates_uniqueness_of :title
-validates :title, :uniqueness => true
-```
-
-#### New syntax:
-```ruby
-validates :title, uniqueness: { conditions: -> { where(deleted_at: nil) } }
 ```
 
 ## Usage
@@ -65,6 +50,13 @@ You can also configure the paranoid field naming on a global basis.  Within the 
 Mongoid::Paranoia.configure do |c|
   c.paranoid_field = :myFieldName
 end
+```
+
+### Validations
+#### You need override uniqueness validates
+
+```ruby
+validates :title, uniqueness: { conditions: -> { where(deleted_at: nil) } }
 ```
 
 ### Callbacks

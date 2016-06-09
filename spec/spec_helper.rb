@@ -4,7 +4,6 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 require "mongoid"
 require "mongoid/paranoia"
 require "rspec"
-Dir[File.join(File.dirname(__FILE__), "app/models/*.rb")].each{ |f| require f }
 
 # These environment variables can be set if wanting to test against a database
 # that is not on the local machine.
@@ -33,6 +32,7 @@ end
 
 # Set the database that the spec suite connects to.
 Mongoid.configure do |config|
+  config.belongs_to_required_by_default = false
   config.connect_to(database_id)
 end
 
@@ -55,7 +55,7 @@ RSpec.configure do |config|
 
   config.before(:all) do
     Mongoid.logger.level = Logger::INFO
-    Mongo::Logger.logger.level = Logger::INFO if Mongoid::Compatibility::Version.mongoid5?
+    Mongo::Logger.logger.level = Logger::INFO
   end
 
   config.after(:all) do
@@ -71,3 +71,5 @@ end
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular("address_components", "address_component")
 end
+
+Dir[File.join(File.dirname(__FILE__), "app/models/*.rb")].each{ |f| require f }

@@ -91,7 +91,7 @@ describe Mongoid::Attributes::Nested do
                           context "when saving the parent" do
 
                             before do
-                              persisted.with(safe: true).save
+                              persisted.save
                             end
 
                             it "deletes the marked document from the relation" do

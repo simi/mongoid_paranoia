@@ -1,17 +1,19 @@
 language: ruby
 
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.0
-  - 2.2
-  - rbx-2.2.10
-  - jruby-19mode
+  - 2.2.2
+  - 2.3.1
+  - jruby-9.1.2.0
 
-env:
-  - MONGOID_VERSION=4.0
-  - MONGOID_VERSION=5.0
+gemfile:
+  - Gemfile
 
 services:
-  - mongodb
+- mongodb
 
+addons:
+  apt:
+    sources:
+    - mongodb-3.2-precise
+    packages:
+    - mongodb-org-server

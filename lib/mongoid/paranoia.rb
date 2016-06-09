@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'mongoid/compatibility'
 require 'mongoid/paranoia/monkey_patches'
 require 'mongoid/paranoia/configuration'
 require 'active_support'
@@ -95,15 +94,17 @@ module Mongoid
     # @return [ true ] True.
     #
     # @since 1.0.0
-    def remove_with_paranoia(options = {})
+    alias orig_remove :remove
+
+    def remove(_ = {})
       cascade!
       time = self.deleted_at = Time.now
-      _paranoia_update("$set" => { paranoid_field => time })
+      _paranoia_update('$set' => { paranoid_field => time })
       @destroyed = true
       true
     end
-    alias_method_chain :remove, :paranoia
-    alias :delete :remove
+
+    alias delete :remove
 
     # Delete the paranoid +Document+ from the database completely.
     #
@@ -114,7 +115,7 @@ module Mongoid
     #
     # @since 1.0.0
     def delete!
-      remove_without_paranoia
+      orig_remove
     end
 
     # Determines if this document is destroyed.
@@ -193,16 +194,10 @@ module Mongoid
       embedded? ? "#{atomic_position}.#{field}" : field
     end
 
-    # Update value in the collection (compatibility layer for Mongoid 4/5).
-    #
     # @return [ Object ] Update result.
+    #
     def _paranoia_update(value)
-      query = paranoid_collection.find(atomic_selector)
-      if Mongoid::Compatibility::Version.mongoid5?
-        query.update_one(value)
-      else
-        query.update(value)
-      end
+      paranoid_collection.find(atomic_selector).update_one(value)
     end
   end
 end
