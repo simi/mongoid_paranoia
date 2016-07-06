@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 case version = ENV['MONGOID_VERSION'] || '5'
+when /^6/
+  gem 'mongoid', git: 'git@github.com:mongodb/mongoid.git'
 when /^5/
   gem 'mongoid', '~> 5.0'
 when /^4/

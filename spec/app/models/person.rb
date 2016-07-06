@@ -14,7 +14,6 @@ class Person
   embeds_many :paranoid_phones, validate: false
 
   has_many :paranoid_posts, validate: false
-  belongs_to :paranoid_post
 
   accepts_nested_attributes_for :addresses
   accepts_nested_attributes_for :paranoid_phones
