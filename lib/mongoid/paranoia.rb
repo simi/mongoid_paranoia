@@ -198,7 +198,7 @@ module Mongoid
     # @return [ Object ] Update result.
     def _paranoia_update(value)
       query = paranoid_collection.find(atomic_selector)
-      if Mongoid::Compatibility::Version.mongoid5?
+      if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
         query.update_one(value)
       else
         query.update(value)

@@ -69,7 +69,7 @@ describe Mongoid::Paranoia do
       end
 
       it "returns the deleted documents" do
-        expect(deleted).to eq([ post ])
+        expect(deleted).to match_array([ post ])
       end
     end
 
