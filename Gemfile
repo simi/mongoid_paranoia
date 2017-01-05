@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 gemspec name: 'mongoid_paranoia'
 
-gem 'mongoid', github: 'mongodb/mongoid'
+gem 'mongoid', '~> 6.0'
 
 group :test do
   gem 'rspec', '~> 3.4.0'
