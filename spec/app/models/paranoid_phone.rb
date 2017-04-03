@@ -20,6 +20,6 @@ class ParanoidPhone
   end
 
   def halt_me
-    person.age == 42 ? false : true
+    throw :abort if person.age == 42
   end
 end
