@@ -6,6 +6,10 @@ The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself
 
 **Caution:** This repo/gem `mongoid_paranoia` (underscored) is different than [mongoid-paranoia](https://github.com/haihappen/mongoid-paranoia) (hyphenated). The goal of `mongoid-paranoia` (hyphenated) is to stay API compatible and it only accepts security fixes.
 
+## Ruby compatibility
+
+Problems have been reported when run with MRI 2.4.0. Switching to 2.4.1 solved the issue. Details: [issue #53](https://github.com/simi/mongoid_paranoia/issues/53)
+
 ## Installation
 
 Add this line to your application's Gemfile:
