@@ -94,8 +94,7 @@ module Mongoid
     # @return [ true ] True.
     #
     # @since 1.0.0
-    alias orig_remove :remove
-
+    
     def remove(_ = {})
       cascade!
       time = self.deleted_at = Time.now
@@ -103,6 +102,7 @@ module Mongoid
       @destroyed = true
       true
     end
+    alias orig_remove :remove
 
     alias delete :remove
 
