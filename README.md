@@ -1,4 +1,5 @@
-# Paranoid Documents for Mongoid [![Build Status](https://travis-ci.org/simi/mongoid_paranoia.svg?branch=master)](https://travis-ci.org/simi/mongoid_paranoia) [![Gem Version](https://img.shields.io/gem/v/mongoid_paranoia.svg)](https://rubygems.org/gems/mongoid_paranoia) [![Gitter chat](https://badges.gitter.im/simi/mongoid_paranoia.svg)](https://gitter.im/simi/mongoid_paranoia)
+# Paranoid Documents for Mongoid
+[![Build Status](https://travis-ci.org/simi/mongoid_paranoia.svg?branch=master)](https://travis-ci.org/simi/mongoid_paranoia) [![Gem Version](https://img.shields.io/gem/v/mongoid_paranoia.svg)](https://rubygems.org/gems/mongoid_paranoia) [![Gitter chat](https://badges.gitter.im/simi/mongoid_paranoia.svg)](https://gitter.im/simi/mongoid_paranoia)
 
 `Mongoid::Paranoia` enables a "soft delete" of Mongoid documents. Instead of being removed from the database, paranoid docs are flagged with a `deleted_at` timestamp and are ignored from queries by default.
 
