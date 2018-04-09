@@ -162,7 +162,12 @@ module Mongoid
     def restore_relations
       self.relations.each_pair do |name, metadata|
         next unless metadata[:dependent] == :destroy
-        relation = self.send(name)
+        relation_model =  metadata[:class_name].try(:safe_constantize) || name.classify.safe_constantize
+        if relation_model
+          relation = relation_model.unscoped { self.send(name) }
+        else
+          next
+        end
         if relation.present? && relation.paranoid?
           Array.wrap(relation).each do |doc|
             doc.restore(:recursive => true)
