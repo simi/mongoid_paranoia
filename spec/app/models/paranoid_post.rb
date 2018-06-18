@@ -12,8 +12,8 @@ class ParanoidPost
   belongs_to :person
 
   has_and_belongs_to_many :tags
-  has_many :authors, dependent: :delete, inverse_of: :post
-  has_many :titles, dependent: :restrict
+  has_many :authors, dependent: :delete_all, inverse_of: :post
+  has_many :titles, dependent: :restrict_with_error
 
   scope :recent, -> {where(created_at: { "$lt" => Time.now, "$gt" => 30.days.ago })}
 

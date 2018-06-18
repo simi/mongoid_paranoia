@@ -97,7 +97,7 @@ module Mongoid
     alias orig_remove :remove
 
     def remove(_ = {})
-      cascade!
+      return false unless catch(:abort) { apply_delete_dependencies! }
       time = self.deleted_at = Time.now
       _paranoia_update('$set' => { paranoid_field => time })
       @destroyed = true
@@ -160,8 +160,8 @@ module Mongoid
     end
 
     def restore_relations
-      self.relations.each_pair do |name, metadata|
-        next unless metadata[:dependent] == :destroy
+      self.relations.each_pair do |name, association|
+        next unless association.dependent == :destroy
         relation = self.send(name)
         if relation.present? && relation.paranoid?
           Array.wrap(relation).each do |doc|
