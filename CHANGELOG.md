@@ -1,3 +1,7 @@
+## 0.4.0
+
+* Mongoid 7.0 support, dropped Mongoid 6 and Ruby < 2.3
+
 ## 0.3.0
 
 * Mongoid 6.0 support, dropped Mongoid 4/5 and Ruby < 2.2.2
