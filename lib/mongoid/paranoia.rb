@@ -97,7 +97,11 @@ module Mongoid
     alias orig_remove :remove
 
     def remove(_ = {})
-      return false unless catch(:abort) { apply_delete_dependencies! }
+      if Mongoid::VERSION >= "7.3.0"
+        return false unless catch(:abort) { apply_destroy_dependencies! }
+      else
+        return false unless catch(:abort) { apply_delete_dependencies! }
+      end
       time = self.deleted_at = Time.now
       _paranoia_update('$set' => { paranoid_field => time })
       @destroyed = true
