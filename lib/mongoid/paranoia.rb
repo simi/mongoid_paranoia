@@ -50,23 +50,6 @@ module Mongoid
       define_model_callbacks :remove
     end
 
-    # Delete the paranoid +Document+ from the database completely. This will
-    # run the destroy callbacks.
-    #
-    # @example Hard destroy the document.
-    #   document.destroy!
-    #
-    # @return [ true, false ] If the operation succeeded.
-    #
-    # @since 1.0.0
-    def destroy!
-      run_callbacks(:destroy) do
-        run_callbacks(:remove) do
-          delete!
-        end
-      end
-    end
-
     # Override the persisted method to allow for the paranoia gem.
     # If a paranoid record is selected, then we only want to check
     # if it's a new record, not if it is "destroyed"
@@ -92,34 +75,41 @@ module Mongoid
     # @return [ true ] True.
     #
     # @since 1.0.0
-    alias orig_remove :remove
+    alias :orig_delete :delete
 
     def remove(_ = {})
-      return false unless catch(:abort) do
-        if respond_to?(:apply_destroy_dependencies!)
-          apply_destroy_dependencies!
-        else
-          apply_delete_dependencies!
-        end
-      end
       time = self.deleted_at = Time.now
       _paranoia_update('$set' => { paranoid_field => time })
       @destroyed = true
       true
     end
 
-    alias delete :remove
+    alias :delete :remove
+    alias :delete! :orig_delete
 
-    # Delete the paranoid +Document+ from the database completely.
+    # Delete the paranoid +Document+ from the database completely. This will
+    # run the destroy and remove callbacks.
     #
-    # @example Hard delete the document.
-    #   document.delete!
+    # @example Hard destroy the document.
+    #   document.destroy!
     #
     # @return [ true, false ] If the operation succeeded.
     #
     # @since 1.0.0
-    def delete!
-      orig_remove
+    def destroy!(options = {})
+      raise Errors::ReadonlyDocument.new(self.class) if readonly?
+      self.flagged_for_destroy = true
+      result = run_callbacks(:destroy) do
+        run_callbacks(:remove) do
+          if catch(:abort) { apply_destroy_dependencies! }
+            delete!(options || {})
+          else
+            false
+          end
+        end
+      end
+      self.flagged_for_destroy = false
+      result
     end
 
     # Determines if this document is destroyed.
