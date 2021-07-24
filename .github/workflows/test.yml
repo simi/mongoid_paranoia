@@ -1,0 +1,45 @@
+name: CI RSpec Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: >-
+      ${{ matrix.ruby }}
+    env:
+      CI: true
+      TESTOPTS: -v
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: true
+      matrix:
+        ruby: [2.6, 2.7]
+        experimental: [false]
+        include:
+          - ruby: head
+            experimental: true
+
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@v2
+
+      - name: start mongodb
+        uses: supercharge/mongodb-github-action@1.6.0
+        with:
+          mongodb-version: 4.4
+          mongodb-replica-set: rs0
+
+      - name: load ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler: 2
+
+      - name: bundle install
+        run:  bundle install --jobs 4 --retry 3
+
+      - name: test
+        timeout-minutes: 10
+        run: bundle exec rake spec
+        continue-on-error: ${{ matrix.experimental }}
