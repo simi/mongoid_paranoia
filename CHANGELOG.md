@@ -1,3 +1,8 @@
+## 0.5.0 (2021/07/24)
+
+* Support only Mongoid 7.3 and later.
+* In conformity with Mongoid 7.3+ behavior, dependencies are not destroyed when calling delete/delete!
+
 ## 0.4.1 (2021/07/24)
 
 * Do not allow Mongoid 7.3 and later, due to breaking changes
