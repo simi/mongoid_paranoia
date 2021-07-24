@@ -14,10 +14,14 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        ruby: [2.6, 2.7]
+        ruby: [2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 3.0, jruby, truffleruby]
         experimental: [false]
         include:
           - ruby: head
+            experimental: true
+          - ruby: jruby-head
+            experimental: true
+          - ruby: truffleruby-head
             experimental: true
 
     steps:

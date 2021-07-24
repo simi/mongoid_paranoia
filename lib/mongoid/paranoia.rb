@@ -95,7 +95,13 @@ module Mongoid
     alias orig_remove :remove
 
     def remove(_ = {})
-      return false unless catch(:abort) { apply_delete_dependencies! }
+      return false unless catch(:abort) do
+        if respond_to?(:apply_destroy_dependencies!)
+          apply_destroy_dependencies!
+        else
+          apply_delete_dependencies!
+        end
+      end
       time = self.deleted_at = Time.now
       _paranoia_update('$set' => { paranoid_field => time })
       @destroyed = true
