@@ -1,10 +1,19 @@
+## 0.4.1 (2021/07/24)
+
+* Do not allow Mongoid 7.3 and later, due to breaking changes
+* Switch to Github Actions from Travis CI
+* Add Rubocop and fix issues
+* Dropped Ruby < 2.4
+
 ## 0.4.0 (2019/05/29)
 
-* Mongoid 7.0 support, dropped Mongoid 6 and Ruby < 2.3
+* Mongoid 7.0 support
+* Drop Mongoid 6 and Ruby < 2.3
 
 ## 0.3.0 (2017/01/05)
 
-* Mongoid 6.0 support, dropped Mongoid 4/5 and Ruby < 2.2.2
+* Mongoid 6.0 support
+* Drop Mongoid 4/5 and Ruby < 2.2.2
 
 ## 0.2.1 (2015/09/28)
 
