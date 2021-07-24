@@ -1,0 +1,48 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  TargetRubyVersion: 2.6
+  Exclude:
+    - spec/**/*
+    - vendor/**/*
+
+Bundler/DuplicatedGem:
+  Exclude:
+    - 'Gemfile'
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Layout/IndentationWidth:
+  IgnoredPatterns:
+    - '^\s*module'
+
+Layout/LineLength:
+  Max: 120
+
+Layout/SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: false
+
+Naming/FileName:
+  Exclude:
+    - 'lib/mongoid-paranoia.rb'
+
+Style/Documentation:
+  Enabled: false
+
+Style/DocumentDynamicEvalDefinition:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Style/RaiseArgs:
+  EnforcedStyle: compact

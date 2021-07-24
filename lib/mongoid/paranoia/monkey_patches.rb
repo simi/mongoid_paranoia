@@ -1,4 +1,5 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 module Mongoid
   module Paranoia
     module Document
@@ -14,7 +15,7 @@ module Mongoid
   end
 end
 
-Mongoid::Document.send(:include, Mongoid::Paranoia::Document)
+Mongoid::Document.include Mongoid::Paranoia::Document
 
 module Mongoid
   module Association
@@ -38,7 +39,7 @@ module Mongoid
           if !doc.embedded? || parent.new_record? || doc.paranoid?
             destroy_document(relation, doc)
           else
-            parent.flagged_destroys.push(->{ destroy_document(relation, doc) })
+            parent.flagged_destroys.push(-> { destroy_document(relation, doc) })
           end
         end
       end
