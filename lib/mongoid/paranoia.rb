@@ -41,11 +41,12 @@ module Mongoid
 
     included do
       field Paranoia.configuration.paranoid_field, as: :deleted_at, type: Time
+      field :deleted, type: Boolean, default: false
 
       self.paranoid = true
 
-      default_scope -> { where(deleted_at: nil) }
-      scope :deleted, -> { ne(deleted_at: nil) }
+      default_scope -> { where(deleted: false) }
+      scope :deleted, -> { where(deleted: true) }
       define_model_callbacks :restore
       define_model_callbacks :remove
     end
@@ -79,7 +80,7 @@ module Mongoid
 
     def remove(_ = {})
       time = self.deleted_at = Time.now
-      _paranoia_update('$set' => { paranoid_field => time })
+      _paranoia_update('$set' => { paranoid_field => time, :deleted => true })
       @destroyed = true
       true
     end
@@ -140,7 +141,7 @@ module Mongoid
     # @since 1.0.0
     def restore(opts = {})
       run_callbacks(:restore) do
-        _paranoia_update('$unset' => { paranoid_field => true })
+        _paranoia_update({'$unset' => { paranoid_field => true }, '$set' => { :deleted => false }})
         attributes.delete('deleted_at')
         @destroyed = false
         restore_relations if opts[:recursive]
