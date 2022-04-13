@@ -40,8 +40,8 @@ module Mongoid
     end
 
     included do
-      field Paranoia.configuration.paranoid_field, as: :deleted_at, type: Time
-      field :is_deleted, type: Boolean, default: false
+      field Paranoia.configuration.paranoid_field, as: :is_deleted, type: Boolean, default: false
+      field Paranoia.configuration.paranoid_timestamp, as: :deleted_at, type: Time
 
       self.paranoid = true
 
@@ -80,7 +80,7 @@ module Mongoid
 
     def remove(_ = {})
       time = self.deleted_at = Time.now
-      _paranoia_update('$set' => { paranoid_field => time, :is_deleted => true })
+      _paranoia_update('$set' => { paranoid_timestamp => time, paranoid_field => true })
       @destroyed = self.is_deleted = true
       true
     end
@@ -141,7 +141,7 @@ module Mongoid
     # @since 1.0.0
     def restore(opts = {})
       run_callbacks(:restore) do
-        _paranoia_update({'$unset' => { paranoid_field => true }, '$set' => { :is_deleted => false }})
+        _paranoia_update({'$unset' => { paranoid_timestamp => true }, '$set' => { paranoid_field => false }})
         attributes.delete('deleted_at')
         @destroyed = self.is_deleted = false
         restore_relations if opts[:recursive]
@@ -183,9 +183,16 @@ module Mongoid
     #   document.paranoid_field
     #
     # @return [ String ] The deleted at field.
-    def paranoid_field
-      field = Paranoia.configuration.paranoid_field
+    def paranoid_attribute(field)
       embedded? ? "#{atomic_position}.#{field}" : field
+    end
+
+    def paranoid_field
+      paranoid_attribute(Paranoia.configuration.paranoid_field)
+    end
+
+    def paranoid_timestamp
+      paranoid_attribute(Paranoia.configuration.paranoid_timestamp)
     end
 
     # @return [ Object ] Update result.
