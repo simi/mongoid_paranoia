@@ -45,8 +45,8 @@ module Mongoid
 
       self.paranoid = true
 
-      default_scope -> { where(deleted_at: nil) }
-      scope :deleted, -> { ne(deleted_at: nil) }
+      default_scope -> { where(is_deleted: false) }
+      scope :deleted, -> { where(is_deleted: true) }
 
       define_model_callbacks :restore
       define_model_callbacks :remove
