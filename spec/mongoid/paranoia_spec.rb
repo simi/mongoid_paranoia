@@ -534,7 +534,7 @@ describe Mongoid::Paranoia do
       it "does not cascade the dependent option" do
         expect {
           author.reload
-        }.to_not raise_error(Mongoid::Errors::DocumentNotFound)
+        }.to_not raise_error
       end
     end
   end
@@ -616,7 +616,7 @@ describe Mongoid::Paranoia do
       it "does not cascade the dependent option" do
         expect {
           author.reload
-        }.to_not raise_error(Mongoid::Errors::DocumentNotFound)
+        }.to_not raise_error
       end
     end
 

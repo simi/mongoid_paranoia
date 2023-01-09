@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 gemspec name: 'mongoid_paranoia'
 
-gem 'mongoid', '~> 7.3'
+gem 'mongoid', '~> 8.0.3'
 
 group :test do
   gem 'rspec', '~> 3.8'

@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = Dir.glob('{perf,spec}/**/*')
   gem.require_paths = ['lib']
 
-  gem.add_dependency 'mongoid', '~> 7.3'
+  gem.add_dependency 'mongoid', '~> 8.0.3'
 
   gem.add_development_dependency 'rubocop', '>= 1.8.1'
 end
