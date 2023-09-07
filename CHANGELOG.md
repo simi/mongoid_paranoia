@@ -1,6 +1,6 @@
 ## 0.6.0 (2023/01/09)
 
-* Now supports mongoid 7.3 to 8.0.x versions.
+* Now supports mongoid 7.3 to 8.x.x versions.
 
 ## 0.5.0 (2021/07/24)
 
