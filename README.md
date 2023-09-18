@@ -1,11 +1,20 @@
 # Paranoid Documents for Mongoid
 [![Build Status](https://travis-ci.org/simi/mongoid_paranoia.svg?branch=master)](https://travis-ci.org/simi/mongoid_paranoia) [![Gem Version](https://img.shields.io/gem/v/mongoid_paranoia.svg)](https://rubygems.org/gems/mongoid_paranoia) [![Gitter chat](https://badges.gitter.im/simi/mongoid_paranoia.svg)](https://gitter.im/simi/mongoid_paranoia)
 
-`Mongoid::Paranoia` enables a "soft delete" of Mongoid documents. Instead of being removed from the database, paranoid docs are flagged with a `deleted_at` timestamp and are ignored from queries by default.
+`Mongoid::Paranoia` enables a "soft delete" of Mongoid documents.
+Instead of being removed from the database, paranoid docs are flagged
+with a `deleted_at` timestamp and are ignored from queries by default.
 
-The `Mongoid::Paranoia` functionality was originally supported in Mongoid itself, but was dropped from version 4.0.0 onwards. This gem was extracted from the [Mongoid 3.0.0-stable branch](https://github.com/mongoid/mongoid/tree/3.0.0-stable). This gem should not be used with Mongoid versions 3.x and prior. Current master branch targeted on Mongoid 6.0. With release 0.3.0 Mongoid 4 and 5 versions will be dropped.
+The `Mongoid::Paranoia` functionality was originally supported in Mongoid
+itself, but was dropped from version 4.0 onwards. This gem was extracted
+from the [Mongoid 3.0.0-stable branch](https://github.com/mongodb/mongoid/tree/3.0.0-stable).
 
 **Caution:** This repo/gem `mongoid_paranoia` (underscored) is different than [mongoid-paranoia](https://github.com/haihappen/mongoid-paranoia) (hyphenated). The goal of `mongoid-paranoia` (hyphenated) is to stay API compatible and it only accepts security fixes.
+
+## Version Support
+
+* The current release is compatible with Mongoid 7.3 and later, and Ruby 2.7 and later.
+* Earlier Mongoid and Ruby versions are supported on earlier releases.
 
 ## Installation
 

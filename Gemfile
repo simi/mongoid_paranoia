@@ -3,12 +3,15 @@
 source 'https://rubygems.org'
 gemspec name: 'mongoid_paranoia'
 
-gem 'mongoid', '~> 7.3'
-
-group :test do
-  gem 'rspec', '~> 3.8'
+case (version = ENV['MONGOID_VERSION'] || '8')
+when 'HEAD'
+  gem 'mongoid', github: 'mongodb/mongoid'
+when /\A\d+\z/
+  gem 'mongoid', "~> #{version}.0"
+else
+  gem 'mongoid', version
 end
 
-group :development do
-  gem 'rake'
-end
+gem 'rake'
+gem 'rspec'
+gem 'rubocop'
