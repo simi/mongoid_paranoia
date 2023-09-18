@@ -75,7 +75,7 @@ module Mongoid
     # @return [ true ] True.
     #
     # @since 1.0.0
-    alias :orig_delete :delete
+    alias orig_delete delete
 
     def remove(_ = {})
       time = self.deleted_at = Time.now
@@ -84,8 +84,8 @@ module Mongoid
       true
     end
 
-    alias :delete :remove
-    alias :delete! :orig_delete
+    alias delete remove
+    alias delete! orig_delete
 
     # Delete the paranoid +Document+ from the database completely. This will
     # run the destroy and remove callbacks.

@@ -35,7 +35,7 @@ end
 
 if ENV['FORCE']
   Mongoid.purge!
-  ::Mongoid::Tasks::Database.create_indexes
+  Mongoid::Tasks::Database.create_indexes
 
   n = 50_000
   n.times {|i| Model.create(text: "text #{i}") }

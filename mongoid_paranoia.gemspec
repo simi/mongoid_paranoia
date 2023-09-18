@@ -14,10 +14,8 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.files         = Dir.glob('lib/**/*') + %w[LICENSE README.md]
-  gem.test_files    = Dir.glob('{perf,spec}/**/*')
   gem.require_paths = ['lib']
 
-  gem.add_dependency 'mongoid', '~> 7.3'
-
-  gem.add_development_dependency 'rubocop', '>= 1.8.1'
+  gem.add_dependency 'mongoid', '>= 7.3'
+  gem.metadata['rubygems_mfa_required'] = 'true'
 end
