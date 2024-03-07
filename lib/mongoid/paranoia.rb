@@ -190,7 +190,7 @@ module Mongoid
     # @return [ Object ] Update result.
     #
     def _paranoia_update(value)
-      paranoid_collection.find(atomic_selector).update_one(value)
+      paranoid_collection.find(atomic_selector).update_one(value, session: _session)
     end
   end
 end
