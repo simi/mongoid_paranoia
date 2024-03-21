@@ -318,6 +318,27 @@ describe Mongoid::Paranoia do
         expect(post).not_to be_destroyed
       end
     end
+
+    context "when multiple operations wrapped inside transaction" do
+
+      let(:post) do
+        ParanoidPost.create(title: "test")
+      end
+
+      before do
+        post.with_session do |session|
+          session.with_transaction(write_concern: {w: :majority}) do
+            post.set(title: "test_new")
+            post.destroy
+          end
+        end
+      end
+
+      it "should perform operations correct and commit result" do
+        expect(post.title).to eq("test_new")
+        expect(post).to be_destroyed
+      end
+    end
   end
 
   describe "#destroyed?" do
