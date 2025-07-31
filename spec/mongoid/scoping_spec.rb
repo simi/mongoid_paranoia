@@ -51,5 +51,28 @@ describe Mongoid::Criteria::Scopable do
         expect(criteria.selector).to eq({ "fresh" => true })
       end
     end
+
+    context "when chaining with_deleted" do
+
+      let(:criteria) do
+        Fish.fresh.with_deleted
+      end
+
+      if respond_to?(:allow_scopes_to_unset_default_scope=)
+        before do
+          Mongoid.configure do |config|
+            config.try(:allow_scopes_to_unset_default_scope=, true)
+          end
+
+          it "removes only deleted_at from the selector" do
+            expect(criteria.selector).to eq({ "fresh" => true })
+          end
+        end
+      else
+        it "raises an error if the feature is not supported" do
+          expect { criteria.selector }.to raise_error(/requires Mongoid >= 9/)
+        end
+      end
+    end
   end
 end

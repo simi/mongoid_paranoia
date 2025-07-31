@@ -98,6 +98,29 @@ describe Mongoid::Paranoia do
     end
   end
 
+  describe ".with_deleted" do
+
+    let(:posts) do
+      2.times { |i| ParanoidPost.create(title: "testing #{i}") }
+    end
+
+    before do
+      Mongoid.configure do |config|
+        config.try(:allow_scopes_to_unset_default_scope=, true)
+      end
+
+      posts.first.destroy
+    end
+
+    let(:with_deleted) do
+      ParanoidPost.with_deleted
+    end
+
+    it "returns the deleted documents" do
+      expect(with_deleted).to eq(posts)
+    end
+  end if respond_to?(:allow_scopes_to_unset_default_scope=)
+
   describe "#destroy!" do
 
     context "when the document is a root" do
