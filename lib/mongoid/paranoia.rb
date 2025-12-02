@@ -46,6 +46,12 @@ module Mongoid
 
       default_scope -> { where(deleted_at: nil) }
       scope :deleted, -> { ne(deleted_at: nil) }
+      scope :with_deleted, lambda {
+        msg = 'This scope requires Mongoid >= 9 and allow_scopes_to_unset_default_scope to be set to true'
+        raise msg unless Mongoid.try(:allow_scopes_to_unset_default_scope)
+
+        criteria.remove_scoping(unscoped.where(deleted_at: nil))
+      }
       define_model_callbacks :restore
       define_model_callbacks :remove
     end
@@ -77,7 +83,7 @@ module Mongoid
     # @since 1.0.0
     alias orig_delete delete
 
-    def remove(_ = {})
+    def remove(_ = {}) # rubocop:disable Naming/PredicateMethod
       time = self.deleted_at = Time.now
       _paranoia_update('$set' => { paranoid_field => time })
       @destroyed = true
