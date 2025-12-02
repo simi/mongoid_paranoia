@@ -83,7 +83,7 @@ module Mongoid
     # @since 1.0.0
     alias orig_delete delete
 
-    def remove(_ = {})
+    def remove(_ = {}) # rubocop:disable Naming/PredicateMethod
       time = self.deleted_at = Time.now
       _paranoia_update('$set' => { paranoid_field => time })
       @destroyed = true

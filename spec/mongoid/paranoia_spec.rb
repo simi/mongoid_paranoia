@@ -105,6 +105,8 @@ describe Mongoid::Paranoia do
     end
 
     around do |example|
+      skip unless Mongoid.respond_to?(:allow_scopes_to_unset_default_scope=)
+
       original_value = Mongoid.allow_scopes_to_unset_default_scope
       Mongoid.configure { |config| config.allow_scopes_to_unset_default_scope = true }
 
@@ -124,7 +126,7 @@ describe Mongoid::Paranoia do
     it "returns the deleted documents" do
       expect(with_deleted).to eq(posts)
     end
-  end if Mongoid.respond_to?(:allow_scopes_to_unset_default_scope=)
+  end
 
   describe "#destroy!" do
 
