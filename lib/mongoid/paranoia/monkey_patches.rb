@@ -19,36 +19,6 @@ Mongoid::Document.include Mongoid::Paranoia::Document
 
 module Mongoid
   module Association
-    module Nested
-      class Many
-        # Destroy the child document, needs to do some checking for embedded
-        # relations and delay the destroy in case parent validation fails.
-        #
-        # @api private
-        #
-        # @example Destroy the child.
-        #   builder.destroy(parent, relation, doc)
-        #
-        # @param [ Document ] parent The parent document.
-        # @param [ Proxy ] relation The relation proxy.
-        # @param [ Document ] doc The doc to destroy.
-        #
-        # @since 3.0.10
-        def destroy(parent, relation, doc)
-          doc.flagged_for_destroy = true
-          if !doc.embedded? || parent.new_record?
-            destroy_document(relation, doc)
-          else
-            parent.flagged_destroys.push(-> { destroy_document(relation, doc) })
-          end
-        end
-      end
-    end
-  end
-end
-
-module Mongoid
-  module Association
     module Embedded
       class EmbedsMany
         class Proxy < Association::Many
