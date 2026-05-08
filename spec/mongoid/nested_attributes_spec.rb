@@ -68,24 +68,35 @@ describe Mongoid::Attributes::Nested do
                             }
                           end
 
-                          it "removes the first document from the relation" do
-                            expect(persisted.paranoid_phones.size).to eq(2)
+                          # The destroy is deferred until parent save (matching stock
+                          # Mongoid behavior for non-paranoid embedded docs). Pre-save the
+                          # in-memory collection still contains the doc flagged for destruction.
+
+                          it "flags the marked document for destruction" do
+                            expect(phone_one.flagged_for_destroy?).to be true
                           end
 
-                          it "does not delete the unmarked document" do
-                            expect(persisted.paranoid_phones.first.number).to eq("3")
+                          it "does not soft-delete the marked document until save" do
+                            expect(phone_one).not_to be_destroyed
+                            expect(phone_one.reload.deleted_at).to be_nil
+                          end
+
+                          it "keeps the marked document in the relation pending save" do
+                            expect(persisted.paranoid_phones.size).to eq(3)
+                          end
+
+                          it "applies the update to the unmarked document" do
+                            expect(persisted.paranoid_phones.find(phone_two.id).number).to eq("3")
                           end
 
                           it "adds the new document to the relation" do
                             expect(persisted.paranoid_phones.last.number).to eq("4")
                           end
 
-                          it "has the proper persisted count" do
-                            expect(persisted.paranoid_phones.count).to eq(1)
-                          end
-
-                          it "soft deletes the removed document" do
-                            expect(phone_one).to be_destroyed
+                          it "counts only persisted (non-pending) docs" do
+                            # phone_one and phone_two are persisted; the new phone is not
+                            # persisted until parent save runs.
+                            expect(persisted.paranoid_phones.count).to eq(2)
                           end
 
                           context "when saving the parent" do
@@ -109,6 +120,56 @@ describe Mongoid::Attributes::Nested do
                         end
                       end
                     end
+                  end
+                end
+
+                context "regression: deferred destroy on parent validation failure" do
+                  # Before the fix, assigning _destroy: true on a paranoid embedded doc
+                  # immediately persisted a soft-delete via update_one, regardless of
+                  # whether the parent's subsequent save succeeded. This left orphaned
+                  # soft-deletes if the parent was rejected by validations or if save
+                  # was never called (e.g. a read-only preview endpoint).
+
+                  before(:all) do
+                    Person.send(:undef_method, :paranoid_phones_attributes=)
+                    Person.accepts_nested_attributes_for :paranoid_phones, allow_destroy: true
+                  end
+
+                  after(:all) do
+                    Person.send(:undef_method, :paranoid_phones_attributes=)
+                    Person.accepts_nested_attributes_for :paranoid_phones
+                  end
+
+                  let!(:persisted) do
+                    Person.create do |p|
+                      p.paranoid_phones << ParanoidPhone.new(number: "1")
+                    end
+                  end
+                  let(:phone) { persisted.paranoid_phones.first }
+
+                  it "does not soft-delete when assign_attributes is not followed by save" do
+                    persisted.assign_attributes(paranoid_phones_attributes: [{ id: phone.id, _destroy: "1" }])
+                    expect(phone.reload.deleted_at).to be_nil
+                    expect(persisted.reload.paranoid_phones.count).to eq(1)
+                  end
+
+                  it "does not soft-delete when the parent save fails validation" do
+                    invalid = Class.new(StandardError)
+                    Person.validate { errors.add(:base, "nope") if @reject_save }
+                    persisted.instance_variable_set(:@reject_save, true)
+                    expect {
+                      persisted.update_attributes!(paranoid_phones_attributes: [{ id: phone.id, _destroy: "1" }])
+                    }.to raise_error(Mongoid::Errors::Validations)
+                    expect(phone.reload.deleted_at).to be_nil
+                    expect(persisted.reload.paranoid_phones.count).to eq(1)
+                    Person._validate_callbacks.clear
+                  end
+
+                  it "soft-deletes when the parent save succeeds" do
+                    persisted.update_attributes!(paranoid_phones_attributes: [{ id: phone.id, _destroy: "1" }])
+                    expect(phone.reload.deleted_at).not_to be_nil
+                    expect(persisted.reload.paranoid_phones.count).to eq(0)
+                    expect(persisted.reload.paranoid_phones.unscoped.count).to eq(1)
                   end
                 end
 

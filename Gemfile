@@ -15,3 +15,4 @@ end
 gem 'rake'
 gem 'rspec'
 gem 'rubocop'
+gem 'ostruct'
