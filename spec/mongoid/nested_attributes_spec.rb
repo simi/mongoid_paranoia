@@ -68,10 +68,6 @@ describe Mongoid::Attributes::Nested do
                             }
                           end
 
-                          # The destroy is deferred until parent save (matching stock
-                          # Mongoid behavior for non-paranoid embedded docs). Pre-save the
-                          # in-memory collection still contains the doc flagged for destruction.
-
                           it "flags the marked document for destruction" do
                             expect(phone_one.flagged_for_destroy?).to be true
                           end
@@ -93,9 +89,7 @@ describe Mongoid::Attributes::Nested do
                             expect(persisted.paranoid_phones.last.number).to eq("4")
                           end
 
-                          it "counts only persisted (non-pending) docs" do
-                            # phone_one and phone_two are persisted; the new phone is not
-                            # persisted until parent save runs.
+                          it "counts only persisted documents" do
                             expect(persisted.paranoid_phones.count).to eq(2)
                           end
 
@@ -117,59 +111,104 @@ describe Mongoid::Attributes::Nested do
                               expect(persisted.reload.paranoid_phones.last.number).to eq("4")
                             end
                           end
+
+                          context "when saving the parent fails validation" do
+
+                            before do
+                              Person.class_eval { validate { errors.add(:base, "nope") } }
+                              persisted.save
+                            end
+
+                            after do
+                              Person._validate_callbacks.clear
+                            end
+
+                            it "does not soft-delete the marked document" do
+                              expect(phone_one.reload.deleted_at).to be_nil
+                            end
+
+                            it "leaves the persisted collection intact" do
+                              expect(persisted.reload.paranoid_phones.count).to eq(2)
+                            end
+
+                            it "does not persist the new document" do
+                              expect(persisted.reload.paranoid_phones.where(number: "4")).to be_empty
+                            end
+                          end
                         end
                       end
                     end
                   end
-                end
 
-                context "regression: deferred destroy on parent validation failure" do
-                  # Before the fix, assigning _destroy: true on a paranoid embedded doc
-                  # immediately persisted a soft-delete via update_one, regardless of
-                  # whether the parent's subsequent save succeeded. This left orphaned
-                  # soft-deletes if the parent was rejected by validations or if save
-                  # was never called (e.g. a read-only preview endpoint).
+                  context "when the child overrides equality" do
 
-                  before(:all) do
-                    Person.send(:undef_method, :paranoid_phones_attributes=)
-                    Person.accepts_nested_attributes_for :paranoid_phones, allow_destroy: true
-                  end
-
-                  after(:all) do
-                    Person.send(:undef_method, :paranoid_phones_attributes=)
-                    Person.accepts_nested_attributes_for :paranoid_phones
-                  end
-
-                  let!(:persisted) do
-                    Person.create do |p|
-                      p.paranoid_phones << ParanoidPhone.new(number: "1")
+                    before(:all) do
+                      ParanoidPhone.class_eval do
+                        def ==(other)
+                          other.is_a?(self.class) && number == other.number
+                        end
+                        alias_method :eql?, :==
+                      end
                     end
-                  end
-                  let(:phone) { persisted.paranoid_phones.first }
 
-                  it "does not soft-delete when assign_attributes is not followed by save" do
-                    persisted.assign_attributes(paranoid_phones_attributes: [{ id: phone.id, _destroy: "1" }])
-                    expect(phone.reload.deleted_at).to be_nil
-                    expect(persisted.reload.paranoid_phones.count).to eq(1)
-                  end
+                    after(:all) do
+                      ParanoidPhone.send(:remove_method, :==)
+                      ParanoidPhone.send(:remove_method, :eql?)
+                    end
 
-                  it "does not soft-delete when the parent save fails validation" do
-                    invalid = Class.new(StandardError)
-                    Person.validate { errors.add(:base, "nope") if @reject_save }
-                    persisted.instance_variable_set(:@reject_save, true)
-                    expect {
-                      persisted.update_attributes!(paranoid_phones_attributes: [{ id: phone.id, _destroy: "1" }])
-                    }.to raise_error(Mongoid::Errors::Validations)
-                    expect(phone.reload.deleted_at).to be_nil
-                    expect(persisted.reload.paranoid_phones.count).to eq(1)
-                    Person._validate_callbacks.clear
-                  end
+                    context "when the parent is persisted" do
 
-                  it "soft-deletes when the parent save succeeds" do
-                    persisted.update_attributes!(paranoid_phones_attributes: [{ id: phone.id, _destroy: "1" }])
-                    expect(phone.reload.deleted_at).not_to be_nil
-                    expect(persisted.reload.paranoid_phones.count).to eq(0)
-                    expect(persisted.reload.paranoid_phones.unscoped.count).to eq(1)
+                      let!(:persisted) do
+                        Person.create do |p|
+                          p.paranoid_phones << [ phone_one, phone_two ]
+                        end
+                      end
+
+                      context "when destroying then re-adding a sibling with the same key" do
+
+                        before do
+                          persisted.paranoid_phones_attributes =
+                            {
+                              "bar" => { "id" => phone_one.id, "_destroy" => "1" },
+                              "baz" => { "number" => "1" }
+                            }
+                        end
+
+                        it "keeps the new sibling in the relation" do
+                          fresh = persisted.paranoid_phones.send(:_target).reject(&:flagged_for_destroy?)
+                          expect(fresh.map(&:number)).to include("1")
+                        end
+
+                        context "when saving the parent" do
+
+                          before do
+                            persisted.save
+                          end
+
+                          it "soft-deletes the original sibling" do
+                            expect(phone_one.reload.deleted_at).not_to be_nil
+                          end
+
+                          it "persists the new sibling" do
+                            reloaded = persisted.reload.paranoid_phones
+                            expect(reloaded.map(&:number)).to contain_exactly("1", "2")
+                            expect(reloaded.where(number: "1").first.id).not_to eq(phone_one.id)
+                          end
+                        end
+                      end
+
+                      context "when pushing a duplicate of a live sibling" do
+
+                        before do
+                          persisted.paranoid_phones.push(ParanoidPhone.new(number: "1"))
+                        end
+
+                        it "does not add the duplicate to the relation" do
+                          target = persisted.paranoid_phones.send(:_target)
+                          expect(target.count {|p| p.number == "1" }).to eq(1)
+                        end
+                      end
+                    end
                   end
                 end
 

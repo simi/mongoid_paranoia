@@ -12,10 +12,33 @@ module Mongoid
         class_attribute :paranoid
       end
     end
+
+    # Skip paranoid docs flagged for destruction when checking whether a
+    # candidate is already related, so they do not block a new sibling with
+    # the same `==` key during a destroy-and-re-add nested attributes update.
+    # Non-paranoid candidates fall through to stock Mongoid behavior via
+    # `super`, so any future upstream fix is inherited automatically.
+    module EmbedsManyProxyExtensions
+      private
+
+      # @example Check if a document is already related.
+      #   relation.send(:object_already_related?, document)
+      #
+      # @param [ Document ] document The candidate document to check.
+      #
+      # @return [ true, false ] If a non-flagged sibling matches.
+      def object_already_related?(document)
+        return super unless document.paranoid?
+        # rubocop:disable Style/CaseEquality -- matches upstream Mongoid's dedup check
+        _target.any? {|existing| existing._id && !existing.flagged_for_destroy? && existing === document }
+        # rubocop:enable Style/CaseEquality
+      end
+    end
   end
 end
 
 Mongoid::Document.include Mongoid::Paranoia::Document
+Mongoid::Association::Embedded::EmbedsMany::Proxy.prepend(Mongoid::Paranoia::EmbedsManyProxyExtensions)
 
 module Mongoid
   module Association
