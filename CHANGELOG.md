@@ -1,3 +1,8 @@
+## 0.7.0 (2026/07/18)
+
+* Add `with_deleted` scope. Requires Mongoid 9 or later with `allow_scopes_to_unset_default_scope` enabled. (#77)
+* Fix `#destroy` hanging after another action inside a transaction. (#74)
+
 ## 0.6.0 (2023/09/18)
 
 * Loosen version support requirement to include Mongoid 7.3, 8.0, and above.
