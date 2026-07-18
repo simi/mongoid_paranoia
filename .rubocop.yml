@@ -41,6 +41,9 @@ Style/DocumentDynamicEvalDefinition:
 Style/DoubleNegation:
   Enabled: false
 
+Style/OneClassPerFile:
+  Enabled: false
+
 Style/OptionalBooleanParameter:
   Enabled: false
 
