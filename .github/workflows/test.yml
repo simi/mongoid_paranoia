@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: ruby ${{ matrix.ruby }} / mongoid ${{ matrix.mongoid }}
+    name: ruby ${{ matrix.ruby }} / mongoid ${{ matrix.mongoid }} / mongodb ${{ matrix.mongodb }}
     env:
       CI: true
       TESTOPTS: -v
@@ -15,28 +15,36 @@ jobs:
       matrix:
         ruby: ['3.3', '3.4']
         mongoid: [7, 8, 9]
+        mongodb: ['7.0', '8.0']
         experimental: [false]
         include:
           - ruby: '4.0'
             mongoid: 9
+            mongodb: '8.0'
             experimental: false
           - ruby: head
             mongoid: head
+            mongodb: '8.0'
             experimental: true
           - ruby: jruby
             mongoid: 8
+            mongodb: '8.0'
             experimental: true
           - ruby: jruby
             mongoid: 9
+            mongodb: '8.0'
             experimental: true
           - ruby: jruby-head
             mongoid: 9
+            mongodb: '8.0'
             experimental: true
           - ruby: truffleruby
             mongoid: 9
+            mongodb: '8.0'
             experimental: true
           - ruby: truffleruby-head
             mongoid: 9
+            mongodb: '8.0'
             experimental: true
 
     steps:
@@ -44,9 +52,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: start mongodb
-        uses: supercharge/mongodb-github-action@1.6.0
+        uses: supercharge/mongodb-github-action@1.12.1
         with:
-          mongodb-version: 4.4
+          mongodb-version: ${{ matrix.mongodb }}
           mongodb-replica-set: rs0
 
       - name: load ruby
