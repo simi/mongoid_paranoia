@@ -12,6 +12,7 @@ else
   gem 'mongoid', version
 end
 
+gem 'ostruct'
 gem 'rake'
 gem 'rspec'
 gem 'rubocop'
