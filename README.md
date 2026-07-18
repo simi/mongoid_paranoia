@@ -52,6 +52,19 @@ You can also access all documents (both deleted and non-deleted) at any time by 
 Person.unscoped.all # Returns all documents, both deleted and non-deleted
 ```
 
+Unlike `unscoped`, which removes *all* scoping, `with_deleted` removes only the soft-delete default scope, so it can be chained onto an existing query to include soft-deleted documents:
+
+```ruby
+Person.where(name: "Bob").with_deleted # Returns matching documents, both deleted and non-deleted
+```
+
+The `with_deleted` scope requires Mongoid 9 or later with `allow_scopes_to_unset_default_scope` enabled (it becomes the default in Mongoid 10):
+
+```ruby
+# config/initializers/mongoid.rb
+Mongoid.allow_scopes_to_unset_default_scope = true
+```
+
 You can also configure the paranoid field naming on a global basis.  Within the context of a Rails app this is done via an initializer.
 
 ```ruby
