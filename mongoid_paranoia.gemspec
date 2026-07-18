@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.files         = Dir.glob('lib/**/*') + %w[LICENSE README.md]
   gem.require_paths = ['lib']
 
+  gem.required_ruby_version = '>= 3.3'
   gem.add_dependency 'mongoid', '>= 7.3'
   gem.metadata['rubygems_mfa_required'] = 'true'
 end
