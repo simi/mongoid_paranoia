@@ -162,10 +162,10 @@ module Mongoid
     def restore_relations
       relations.each_pair do |name, association|
         next unless association.dependent == :destroy
-        relation = send(name)
-        next unless relation.present? && relation.paranoid?
-        Array.wrap(relation).each do |doc|
-          doc.restore(recursive: true)
+        klass = association.klass
+        documents = klass ? klass.unscoped { Array.wrap(send(name)) } : Array.wrap(send(name))
+        documents.each do |doc|
+          doc.restore(recursive: true) if doc.respond_to?(:restore)
         end
       end
     end

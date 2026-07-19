@@ -856,6 +856,20 @@ describe Mongoid::Paranoia do
       it { expect{ subject.restore_relations}.to_not change { NormHasMany.count } }
       it { expect{ subject.restore_relations}.to_not change { NormHabtm.count   } }
     end
+
+    context "when the parent is reloaded before restoring (regression for #30)" do
+      before { subject.destroy }
+
+      it "restores soft-deleted has_many dependents" do
+        reloaded = ParaBase.unscoped.find(subject.id)
+        expect { reloaded.restore(recursive: true) }.to change { ParaHasMany.count }.by(2)
+      end
+
+      it "restores soft-deleted has_one dependents" do
+        reloaded = ParaBase.unscoped.find(subject.id)
+        expect { reloaded.restore(recursive: true) }.to change { ParaHasOne.count }.by(1)
+      end
+    end
   end
 
   describe ".scoped" do
